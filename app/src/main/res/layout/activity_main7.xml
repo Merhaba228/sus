@@ -1,0 +1,149 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/scrollView"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity4"
+    android:background="@drawable/background_test4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView_actualEvents"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="start|top"
+                android:background="@color/violet1"
+                android:fontFamily="@font/alatsi"
+                android:gravity="center"
+                android:text="Опросы"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/arrow_back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/arrow_back"
+                android:background="@null"
+                android:layout_gravity="start|center"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginStart="15dp" />
+
+        </FrameLayout>
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="360dp"
+            android:layout_height="390dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
+            android:gravity="center_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/idTVDate">
+
+            <TableRow
+                android:layout_margin="7dp"
+                android:background="@drawable/table_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView_elementary_survey"
+                        android:layout_width="345dp"
+                        android:layout_height="25dp"
+                        android:layout_weight="1"
+                        android:background="@color/bluelet1"
+                        android:fontFamily="@font/alatsi"
+                        android:gravity="center"
+                        android:text="Опрос"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="Уважаемые студенты!\nПредлагаем Вам принять участие  и обозначить
+                        Ваши потребности в обучении на БЕЗВОЗМЕЗДНОЙ ОСНОВЕ по дополнительным профессиональным программам профессиональной переподготовки
+                        в сфере IT и цифровых технологий в 2022-2023 учебном году."
+                        android:justificationMode="inter_word"
+                        android:paddingTop="20dp"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="Наименование опроса:\n"
+                        android:textSize="13sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="Questionnaire for the study of the expectations and needs of applicants from the learning process at the Ogarev Mordovia State University"
+                        android:textSize="13sp"
+                        android:justificationMode="inter_word" />
+
+                    <RelativeLayout
+                        android:layout_marginTop="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/back_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_centerInParent="true"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:backgroundTint="@color/bluelet1"
+                            android:gravity="center"
+                            android:text="Пройти опрос"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="Автор опроса: ЛАРИНА Д.С.\n"
+                        android:textSize="13sp"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </TableRow>
+
+
+
+        </TableLayout>
+
+
+
+    </LinearLayout>
+
+</ScrollView>

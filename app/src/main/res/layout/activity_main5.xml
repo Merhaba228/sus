@@ -1,0 +1,171 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/scrollView"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity4"
+    android:background="@drawable/background_test4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView_actualEvents"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="start|top"
+                android:background="@color/violet1"
+                android:fontFamily="@font/alatsi"
+                android:gravity="center"
+                android:text="Актуальные события"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/arrow_back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/arrow_back"
+                android:background="@null"
+                android:layout_gravity="start|center"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginStart="15dp" />
+
+        </FrameLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="390dp"
+                app:layout_constraintTop_toBottomOf="@id/idTVDate"
+                android:gravity="center_horizontal"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="25dp">
+
+                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:padding="5dp"
+                        android:text="Выставка Юлии Бакаевой\ «Наедине с природой»\n"
+                        android:paddingStart="10dp"
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:padding="5dp"
+                        android:text=""
+                        android:textSize="14sp" />
+                </TableRow>
+
+                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:padding="5dp"
+                        android:text=""
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:padding="5dp"
+                        android:text=""
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:padding="5dp"
+                        android:text=""
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:padding="5dp"
+                        android:text=""
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:padding="5dp"
+                        android:text=""
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+
+            </TableLayout>
+
+            <TextView
+                android:id="@+id/idTVDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="19 сентября"
+                android:textAlignment="textStart"
+                android:textColor="#FF3700B3"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="50dp"
+                app:layout_constraintTop_toBottomOf="@id/calendarView"  />
+
+            <CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="25dp"
+                android:selectedWeekBackgroundColor="#FF3700B3"
+                android:weekNumberColor="#FF3700B3"
+                android:weekSeparatorLineColor="#FF3700B3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="171dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:layout_margin="26dp"
+            android:text="Мои мероприятия"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</ScrollView>

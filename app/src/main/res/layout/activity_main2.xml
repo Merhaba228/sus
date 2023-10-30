@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_test4"
+    tools:context=".MainActivity2">
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alatsi"
+        android:text="@string/profile"
+        android:textColor="#FF3700B3"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alatsi"
+        android:text="Новости"
+        android:textColor="#FF3700B3"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@id/newsButton"
+        app:layout_constraintStart_toStartOf="@id/newsButton"
+        app:layout_constraintTop_toBottomOf="@id/newsButton" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alatsi"
+        android:text="Расписание"
+        android:textColor="#FF3700B3"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@id/timetableButton"
+        app:layout_constraintStart_toStartOf="@id/timetableButton"
+        app:layout_constraintTop_toBottomOf="@id/timetableButton" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alatsi"
+        android:text="События"
+        android:textColor="#FF3700B3"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@id/imageView4"
+        app:layout_constraintStart_toStartOf="@id/imageView4"
+        app:layout_constraintTop_toBottomOf="@id/imageView4" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alatsi"
+        android:text="Мероприятия"
+        android:textColor="#FF3700B3"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@id/events_Button"
+        app:layout_constraintStart_toStartOf="@id/events_Button"
+        app:layout_constraintTop_toBottomOf="@id/events_Button" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alatsi"
+        android:text="@string/polls"
+        android:textColor="#FF3700B3"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@id/imageView6"
+        app:layout_constraintStart_toStartOf="@id/imageView6"
+        app:layout_constraintTop_toBottomOf="@id/imageView6" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="283dp"
+        android:layout_height="152dp"
+        android:background="@drawable/background2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="ContentDescription" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/imageView"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginEnd="200dp"
+        android:layout_marginBottom="250dp"
+        android:background="@drawable/baseline_person_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"
+        android:clickable="true"
+        android:focusable="true"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/timetableButton"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginBottom="250dp"
+        android:background="@drawable/calendar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/newsButton"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="200dp"
+        android:background="@drawable/timetable"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/events"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/events_Button"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="450dp"
+        android:background="@drawable/performance"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="450dp"
+        android:layout_marginEnd="200dp"
+        android:background="@drawable/baseline_poll_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="171dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="210dp"
+        android:layout_marginBottom="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/exit"
+        android:textSize="19sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:layout_width="171dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="210dp"
+        android:layout_marginBottom="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/help"
+        android:textSize="19sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="86dp"
+        android:src="@drawable/ribbon2"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:ignore="ContentDescription" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
