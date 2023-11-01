@@ -60,6 +60,10 @@ object SharedPrefManager {
         return Gson().fromJson(jsonStudentData, Student::class.java)
     }
 
+    fun getRefreshToken(): String? {
+        return sharedPreferences.getString(REFRESH_TOKEN, null)
+    }
+
     fun clearTokens() {
         sharedPreferences.edit().apply {
             remove(ACCESS_TOKEN)

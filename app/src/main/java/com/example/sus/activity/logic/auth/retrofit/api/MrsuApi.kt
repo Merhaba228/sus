@@ -25,4 +25,11 @@ interface MrsuApi {
         @Field("client_id") clientId: String = "8",
         @Field("client_secret") clientSecret: String = "qweasd"
     ): Token
+
+    @FormUrlEncoded
+    @POST("OAuth/refresh_token")
+    suspend fun getRefreshToken(
+        @Field("grant_type") grantType: String = "refresh_token",
+        @Field("refresh_token") refreshToken: String
+    ): Token
 }
