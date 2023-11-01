@@ -15,7 +15,7 @@ data class User(
     @SerializedName("StudentCod")
     val studentCod: String,
     @SerializedName("BirthDate")
-    val birthDate: Date,
+    val birthDate: String,
     @SerializedName("AcademicDegree")
     val academicDegree: String,
     @SerializedName("AcademicRank")
@@ -29,5 +29,5 @@ data class User(
     @SerializedName("FIO")
     val fio: String,
     @SerializedName("Photo")
-    val photo: List<UserPhoto>
+    val photo: UserPhoto
 )

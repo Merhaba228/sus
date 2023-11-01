@@ -17,7 +17,7 @@ data class Student (
     @SerializedName("StudentCod")
     val studentCod: String,
     @SerializedName("BirthDate")
-    val birthDate: Date,
+    val birthDate: String,
     @SerializedName("SNILS")
     val snils: String,
     @SerializedName("Foreigner")

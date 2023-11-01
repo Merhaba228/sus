@@ -1,93 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayout"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@drawable/background_test4"
-    tools:context=".MainActivity3">
+    android:fillViewport="true">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/imageView9"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:cardCornerRadius="100dp"
-        android:background="@android:color/white"
-        app:cardElevation="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView8"
-        app:layout_constraintEnd_toEndOf="@+id/imageView8"
-        app:layout_constraintStart_toStartOf="@+id/imageView8"
-        app:layout_constraintTop_toBottomOf="@+id/imageView8">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/coordinatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_test4"
+        android:fillViewport="true"
+        >
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/imageView9"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:cardCornerRadius="100dp"
+            android:background="@android:color/white"
+            app:cardElevation="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView8"
+            app:layout_constraintEnd_toEndOf="@+id/imageView8"
+            app:layout_constraintStart_toStartOf="@+id/imageView8"
+            app:layout_constraintTop_toBottomOf="@+id/imageView8">
+
+            <ImageView
+                android:id="@+id/imageView_profile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/cot_profile"
+                android:scaleType="centerCrop" />
+
+        </androidx.cardview.widget.CardView>
 
         <ImageView
+            android:id="@+id/imageView8"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/cot_profile"
-            android:scaleType="centerCrop" />
+            android:layout_height="155dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/top_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Куликов Максим Павлович"
+            android:layout_marginTop="8dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/imageView9"
+            app:layout_constraintStart_toStartOf="@+id/imageView9"
+            app:layout_constraintTop_toBottomOf="@+id/imageView9" />
 
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="match_parent"
-        android:layout_height="155dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/top_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="lych.ref@gmail.com"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="@+id/textView8"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView8"
+            app:layout_constraintTop_toBottomOf="@+id/textView8"
+            android:layout_marginTop="8dp"/>
 
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ID:000082307"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="@+id/textView9"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView9"
+            app:layout_constraintTop_toBottomOf="@+id/textView9"
+            android:layout_marginTop="8dp"/>
 
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Куликов Максим Павлович"
-        android:layout_marginTop="8dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/imageView9"
-        app:layout_constraintStart_toStartOf="@+id/imageView9"
-        app:layout_constraintTop_toBottomOf="@+id/imageView9" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="lych.ref@gmail.com"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@+id/textView8"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView8"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
-        android:layout_marginTop="8dp"/>
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ID:000082307"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@+id/textView9"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView9"
-        app:layout_constraintTop_toBottomOf="@+id/textView9"
-        android:layout_marginTop="8dp"/>
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Дата рождения: 04.07.2003"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@+id/textView10"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView10"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
-        android:layout_marginTop="8dp"/>
-
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Дата рождения: 04.07.2003"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="@+id/textView10"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView10"
+            app:layout_constraintTop_toBottomOf="@+id/textView10"
+            android:layout_marginTop="8dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button3"
@@ -153,6 +159,7 @@
         android:text="Трудоустройство"
         app:layout_constraintTop_toBottomOf="@id/button5" />
 
+
     <Button
         android:id="@+id/back_button"
         android:layout_width="171dp"
@@ -205,5 +212,5 @@
         app:layout_constraintStart_toStartOf ="@id/imageView9"
         />
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

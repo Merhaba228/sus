@@ -3,6 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <supports-screens
+        android:anyDensity="true"
+        android:compatibleWidthLimitDp="960"
+        android:largeScreens="true"
+        android:largestWidthLimitDp="960"
+        android:normalScreens="false"
+        android:requiresSmallestWidthDp="960"
+        android:resizeable="false"
+        android:smallScreens="false"
+        android:xlargeScreens="true" />
+
 
     <application
         android:allowBackup="true"
