@@ -14,6 +14,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 object SharedPrefManager {
     private const val PREF_NAME = "MyPrefs"
@@ -46,12 +49,8 @@ object SharedPrefManager {
         val BASE_URL_TOKEN = "https://p.mrsu.ru"
         val BASE_URL_USER = "https://papi.mrsu.ru"
 
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
-        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
-
-        val tokenApi = createRetrofitClient(BASE_URL_TOKEN).create(MrsuApi::class.java)
-        val userApi = createRetrofitClient(BASE_URL_USER).create(MrsuApi::class.java)
+        val tokenApi = createRetrofitApi(BASE_URL_TOKEN)
+        val userApi = createRetrofitApi(BASE_URL_USER)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -64,6 +63,8 @@ object SharedPrefManager {
                 val refreshedStudentData = userApi.getStudent("Bearer ${userToken.accessToken}")
                 saveStudentData(refreshedStudentData)
 
+                val securityEvents = userApi.getSecurityEvents("Bearer ${userToken.accessToken}","2023-10-20")
+                saveSecurityEvents(securityEvents)
 
             } catch (e: Exception) {
 
@@ -131,6 +132,27 @@ object SharedPrefManager {
         return Gson().fromJson(jsonSecurityEvents, type)
     }
 
+    fun refreshCalendarDateUsingRefreshToken(refreshToken: String, date: String) {
+        val BASE_URL_TOKEN = "https://p.mrsu.ru"
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+
+        val tokenApi = createRetrofitApi(BASE_URL_TOKEN)
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val userToken = tokenApi.getNewToken(refreshToken = refreshToken)
+                saveTokens(userToken.accessToken, userToken.refreshToken)
+
+                val refreshedSecurityEvents = userApi.getSecurityEvents("Bearer ${userToken.accessToken}", date)
+                saveSecurityEvents(refreshedSecurityEvents)
+
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
     fun getRefreshToken(): String? {
         return sharedPreferences.getString(REFRESH_TOKEN, null)
     }
@@ -148,6 +170,23 @@ object SharedPrefManager {
             apply()
         }
 
+
+    }
+
+    private fun createRetrofitApi(baseUrl: String): MrsuApi {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        val client = OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        return retrofit.create(MrsuApi::class.java)
     }
 
 }

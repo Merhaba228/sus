@@ -30,7 +30,7 @@ class timetable_activity : AppCompatActivity() {
 
         dateTV = findViewById(R.id.idTVDate)
         calendarView = findViewById(R.id.calendarView)
-        tableLayout = findViewById(R.id.tableLayout)
+        tableLayout = findViewById(R.id.security_tableLayout)
 
         calendarView.setOnDateChangeListener(OnDateChangeListener { _, year, month, dayOfMonth ->
             val calendar = Calendar.getInstance()
