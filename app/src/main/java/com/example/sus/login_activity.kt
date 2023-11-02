@@ -17,9 +17,12 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
-class MainActivity : AppCompatActivity() {
+class login_activity : AppCompatActivity() {
 
     private lateinit var username: EditText
     private lateinit var password: EditText
@@ -73,17 +76,23 @@ class MainActivity : AppCompatActivity() {
             sharedPrefManager.saveTokens(userToken.accessToken, userToken.refreshToken)
             CoroutineScope(Dispatchers.IO).launch {
                 try {
+
                     val user = userApi.getUser("Bearer ${userToken.accessToken}")
                     sharedPrefManager.saveUserData(user)
+
                     val student = userApi.getStudent("Bearer ${userToken.accessToken}")
                     sharedPrefManager.saveStudentData(student)
+
+                    val securityEvents = userApi.getSecurityEvents("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
+                    sharedPrefManager.saveSecurityEvents(securityEvents)
 
                     runOnUiThread {
                         performActionsAfterAuthentication()
                     }
+
                 } catch (e: Exception) {
                     runOnUiThread {
-                        showErrorToast("Ошибка при получении пользовательских данных в handleTokenResponse ")
+                        showErrorToast("${Date()}, Ошибка при получении пользовательских данных в handleTokenResponse ")
                         Log.e("error_global", e.message.toString())
                         Log.e("error_local", e.localizedMessage)
                     }
@@ -97,7 +106,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun performActionsAfterAuthentication() {
-        val intent = Intent(this@MainActivity, MainActivity2::class.java)
+        val intent = Intent(this@login_activity, general_activity::class.java)
         startActivity(intent)
     }
 
@@ -115,4 +124,5 @@ class MainActivity : AppCompatActivity() {
     private fun showErrorToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
+
 }

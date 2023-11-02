@@ -10,7 +10,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 
-class MainActivity3 : AppCompatActivity() {
+class profile_activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main3)
@@ -35,19 +35,19 @@ class MainActivity3 : AppCompatActivity() {
 
         val button = findViewById<View>(R.id.back_button)
         button.setOnClickListener {
-            val intent = Intent(this@MainActivity3, MainActivity2::class.java)
+            val intent = Intent(this@profile_activity, general_activity::class.java)
             startActivity(intent)
         }
 
         val button2 = findViewById<View>(R.id.exitButton2)
         button2.setOnClickListener {
-            val intent = Intent(this@MainActivity3, MainActivity::class.java)
+            val intent = Intent(this@profile_activity, login_activity::class.java)
             startActivity(intent)
         }
 
         val button3 = findViewById<View>(R.id.turnstiles_button)
         button3.setOnClickListener {
-            val intent = Intent(this@MainActivity3, MainActivity6::class.java)
+            val intent = Intent(this@profile_activity, security_activity::class.java)
             startActivity(intent)
         }
     }

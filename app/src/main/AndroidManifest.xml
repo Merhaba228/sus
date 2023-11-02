@@ -28,29 +28,29 @@
         android:theme="@style/Theme.Sus"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity7"
+            android:name=".polls_activity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity6"
+            android:name=".security_activity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity5"
+            android:name=".actualEvents_activity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity4"
+            android:name=".timetable_activity"
             android:exported="false"
             android:label="@string/title_activity_main4"
             android:theme="@style/Theme.Sus" />
         <activity
-            android:name=".MainActivity3"
+            android:name=".profile_activity"
             android:exported="false"
             android:label="@string/title_activity_main3"
             android:theme="@style/Theme.Sus" />
         <activity
-            android:name=".MainActivity2"
+            android:name=".general_activity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".login_activity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

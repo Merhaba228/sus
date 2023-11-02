@@ -1,5 +1,6 @@
 package com.example.loginapp.activity.logic.auth.retrofit.api
 
+import com.example.loginapp.activity.logic.auth.retrofit.dto.SecurityEvent
 import com.example.loginapp.activity.logic.auth.retrofit.dto.User
 import com.example.loginapp.activity.logic.auth.retrofit.dto.Token
 import com.example.loginapp.activity.logic.auth.retrofit.dto.Student
@@ -8,6 +9,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Header
+import retrofit2.http.Query
 
 interface MrsuApi {
     @GET("v1/User")
@@ -15,6 +17,12 @@ interface MrsuApi {
 
     @GET("v1/StudentInfo")
     suspend fun getStudent(@Header("Authorization") authorization: String): Student
+
+    @GET("v1/Security")
+    suspend fun getSecurityEvents(
+        @Header("Authorization") authorization: String,
+        @Query("date") date: String
+    ): List<SecurityEvent>
 
     @FormUrlEncoded
     @POST("OAuth/token")
@@ -34,5 +42,4 @@ interface MrsuApi {
         @Field("client_id") clientId: String = "8",
         @Field("client_secret") clientSecret: String = "qweasd"
     ): Token
-
 }

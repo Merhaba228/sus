@@ -13,14 +13,14 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class MainActivity4 : AppCompatActivity() {
+class actualEvents_activity : AppCompatActivity() {
     private lateinit var dateTV: TextView
     private lateinit var calendarView: CalendarView
     private lateinit var tableLayout: TableLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main4)
+        setContentView(R.layout.activity_main5)
         val locale = Locale("ru")
         Locale.setDefault(locale)
         val resources = resources
@@ -56,9 +56,9 @@ class MainActivity4 : AppCompatActivity() {
             }
         })
 
-        val button3 = findViewById<View>(R.id.back_button)
-        button3.setOnClickListener {
-            val intent = Intent(this@MainActivity4, MainActivity2::class.java)
+        val arrow_button= findViewById<View>(R.id.back_button)
+        arrow_button.setOnClickListener {
+            val intent = Intent(this@actualEvents_activity, general_activity::class.java)
             startActivity(intent)
         }
     }

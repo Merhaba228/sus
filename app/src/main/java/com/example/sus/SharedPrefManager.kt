@@ -1,8 +1,8 @@
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import com.example.loginapp.activity.logic.auth.retrofit.api.MrsuApi
 import com.example.loginapp.activity.logic.auth.retrofit.dto.User
+import com.example.loginapp.activity.logic.auth.retrofit.dto.SecurityEvent
 import com.example.loginapp.activity.logic.auth.retrofit.dto.Student
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -12,6 +12,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 
 object SharedPrefManager {
     private const val PREF_NAME = "MyPrefs"
@@ -19,6 +21,7 @@ object SharedPrefManager {
     private const val REFRESH_TOKEN = "refresh_token"
     private const val STUDENT_DATA = "student_data"
     private const val USER_DATA = "user_data"
+    private const val SECURITY_EVENTS = "security_events"
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var instance: SharedPrefManager
@@ -55,8 +58,12 @@ object SharedPrefManager {
                 val userToken = tokenApi.getNewToken(refreshToken = refreshToken)
                 saveTokens(userToken.accessToken, userToken.refreshToken)
 
-                val refreshedData = userApi.getUser("Bearer ${userToken.accessToken}")
-                saveUserData(refreshedData)
+                val refreshedUserData = userApi.getUser("Bearer ${userToken.accessToken}")
+                saveUserData(refreshedUserData)
+
+                val refreshedStudentData = userApi.getStudent("Bearer ${userToken.accessToken}")
+                saveStudentData(refreshedStudentData)
+
 
             } catch (e: Exception) {
 
@@ -110,6 +117,20 @@ object SharedPrefManager {
         return Gson().fromJson(jsonStudentData, Student::class.java)
     }
 
+    fun saveSecurityEvents(securityEvents: List<SecurityEvent>) {
+        val jsonSecurityEvents = Gson().toJson(securityEvents)
+        sharedPreferences.edit().apply {
+            putString(SECURITY_EVENTS, jsonSecurityEvents)
+            apply()
+        }
+    }
+
+    fun getSecurityEvents(): List<SecurityEvent>? {
+        val jsonSecurityEvents = sharedPreferences.getString(SECURITY_EVENTS, null)
+        val type: Type = object : TypeToken<List<SecurityEvent>>() {}.type
+        return Gson().fromJson(jsonSecurityEvents, type)
+    }
+
     fun getRefreshToken(): String? {
         return sharedPreferences.getString(REFRESH_TOKEN, null)
     }
@@ -126,5 +147,7 @@ object SharedPrefManager {
             remove(STUDENT_DATA)
             apply()
         }
+
     }
+
 }

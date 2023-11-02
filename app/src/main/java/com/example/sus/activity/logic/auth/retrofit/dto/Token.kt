@@ -9,7 +9,6 @@ data class Token(
     val tokenType: String,
     @SerializedName("expires_in")
     val expiresIn: Int,
-    //еще нужно реализовать рефреш через него...
     @SerializedName("refresh_token")
     val refreshToken: String
 )
