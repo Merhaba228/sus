@@ -69,11 +69,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleTokenResponse(userToken: Token, sharedPrefManager: SharedPrefManager, userApi: MrsuApi) {
         if (userToken.accessToken != null) {
+            Log.d("old_token",userToken.accessToken.toString() )
             sharedPrefManager.saveTokens(userToken.accessToken, userToken.refreshToken)
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val user = userApi.getUser("Bearer ${userToken.accessToken}")
                     sharedPrefManager.saveUserData(user)
+                    val student = userApi.getStudent("Bearer ${userToken.accessToken}")
+                    sharedPrefManager.saveStudentData(student)
+
                     runOnUiThread {
                         performActionsAfterAuthentication()
                     }

@@ -16,9 +16,9 @@
         android:text="@string/profile"
         android:textColor="#FF3700B3"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintEnd_toEndOf="@+id/profile_button"
+        app:layout_constraintStart_toStartOf="@+id/profile_button"
+        app:layout_constraintTop_toBottomOf="@+id/profile_button" />
 
     <TextView
         android:id="@+id/textView2"
@@ -40,9 +40,9 @@
         android:text="Расписание"
         android:textColor="#FF3700B3"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="@id/timetableButton"
-        app:layout_constraintStart_toStartOf="@id/timetableButton"
-        app:layout_constraintTop_toBottomOf="@id/timetableButton" />
+        app:layout_constraintEnd_toEndOf="@id/timetable_button"
+        app:layout_constraintStart_toStartOf="@id/timetable_button"
+        app:layout_constraintTop_toBottomOf="@id/timetable_button" />
 
     <TextView
         android:id="@+id/textView4"
@@ -64,9 +64,9 @@
         android:text="Мероприятия"
         android:textColor="#FF3700B3"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="@id/events_Button"
-        app:layout_constraintStart_toStartOf="@id/events_Button"
-        app:layout_constraintTop_toBottomOf="@id/events_Button" />
+        app:layout_constraintEnd_toEndOf="@id/events_button"
+        app:layout_constraintStart_toStartOf="@id/events_button"
+        app:layout_constraintTop_toBottomOf="@id/events_button" />
 
     <TextView
         android:id="@+id/textView6"
@@ -76,9 +76,9 @@
         android:text="@string/polls"
         android:textColor="#FF3700B3"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="@id/imageView6"
-        app:layout_constraintStart_toStartOf="@id/imageView6"
-        app:layout_constraintTop_toBottomOf="@id/imageView6" />
+        app:layout_constraintEnd_toEndOf="@id/polls_button"
+        app:layout_constraintStart_toStartOf="@id/polls_button"
+        app:layout_constraintTop_toBottomOf="@id/polls_button" />
 
     <ImageView
         android:id="@+id/imageView7"
@@ -94,7 +94,7 @@
         tools:ignore="ContentDescription" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/imageView"
+        android:id="@+id/profile_button"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginEnd="200dp"
@@ -110,7 +110,7 @@
         />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/timetableButton"
+        android:id="@+id/timetable_button"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginStart="200dp"
@@ -152,7 +152,7 @@
         tools:ignore="ContentDescription" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/events_Button"
+        android:id="@+id/events_button"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginStart="200dp"
@@ -164,13 +164,15 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-    <ImageView
-        android:id="@+id/imageView6"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/polls_button"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginTop="450dp"
         android:layout_marginEnd="200dp"
-        android:background="@drawable/baseline_poll_24"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/polls_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

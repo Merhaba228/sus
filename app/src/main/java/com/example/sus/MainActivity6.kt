@@ -12,7 +12,7 @@ class MainActivity6 : AppCompatActivity() {
 
         val arrow_button= findViewById<View>(R.id.arrow_back)
         arrow_button.setOnClickListener {
-            val intent = Intent(this@MainActivity6, MainActivity2::class.java)
+            val intent = Intent(this@MainActivity6, MainActivity3::class.java)
             startActivity(intent)
         }
     }
