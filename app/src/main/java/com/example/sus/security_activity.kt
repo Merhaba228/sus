@@ -9,14 +9,17 @@ import android.widget.TableRow
 import android.widget.TextView
 import android.graphics.Color
 import android.view.Gravity
-import android.util.Log
 import android.widget.CalendarView
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import android.widget.CalendarView.OnDateChangeListener
-
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+import com.example.loginapp.activity.logic.auth.retrofit.dto.SecurityEvent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class security_activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,69 +34,84 @@ class security_activity : AppCompatActivity() {
         resources.updateConfiguration(configuration, resources.displayMetrics)
         SharedPrefManager.getInstance(this)
 
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
         val dateTV = findViewById<TextView>(R.id.idTVDate)
+        val tableLayout = findViewById<TableLayout>(R.id.security_tableLayout)
         val calendarView = findViewById<CalendarView>(R.id.calendarView)
 
-//        dateTV.text = SimpleDateFormat("yyyy-MM-dd", Locale("ru")).format(Date())
+        val currentDate = Calendar.getInstance()
+        val securityEvents = SharedPrefManager.getSecurityEvents()
 
-        calendarView.setOnDateChangeListener(OnDateChangeListener { _, year, month, dayOfMonth ->
+        createSecurityTableOnDate( Date().year, Date().month.toInt(), Date().day.toInt(), dateTV, securityEvents)
+        dateTV.text = SimpleDateFormat("yyyy-MM-dd", Locale("ru")).format(Date())
+        calendarView.setDate(currentDate.timeInMillis)
+
+        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            tableLayout.removeAllViews()
             val calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
-
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
             val formattedDate = dateFormat.format(calendar.time)
             dateTV.text = formattedDate
 
-            SharedPrefManager.refreshCalendarDateUsingRefreshToken(SharedPrefManager.getRefreshToken().toString(), formattedDate)
+            CoroutineScope(Dispatchers.Main).launch {
+                val refreshToken = SharedPrefManager.getRefreshToken().toString()
 
-            val securityEvents = SharedPrefManager.getSecurityEvents()
+                val securityEvents: List<SecurityEvent> = suspendCoroutine { continuation ->
+                    SharedPrefManager.refreshCalendarDateUsingRefreshToken(refreshToken, formattedDate) { securityEvents ->
+                        continuation.resume(securityEvents)
+                    }
+                }
 
-            val tableLayout = findViewById<TableLayout>(R.id.security_tableLayout)
-            tableLayout.removeAllViews()
-
-            securityEvents?.forEach { event ->
-                val tableRow = TableRow(this)
-                tableRow.setBackgroundResource(R.drawable.table_border)
-                tableRow.setPadding(7, 7, 5, 7)
-
-                val timeTextView = TextView(this)
-                timeTextView.text = event.time?.substring(0, 8)
-                timeTextView.setTextColor(Color.BLACK)
-                timeTextView.gravity = Gravity.CENTER
-                timeTextView.setPadding(30, 15, 5, 15)
-                timeTextView.textSize = 16f
-
-                val buildTextView = TextView(this)
-                buildTextView.text = event.build
-                buildTextView.setTextColor(Color.BLACK)
-                buildTextView.gravity = Gravity.START
-                buildTextView.setPadding(30, 15, 5, 15)
-                buildTextView.textSize = 16f
-
-                val statusTextView = TextView(this)
-                statusTextView.text = event.status
-                statusTextView.setTextColor(Color.BLACK)
-                statusTextView.gravity = Gravity.END
-                statusTextView.textSize = 16f
-                statusTextView.setPadding(80, 15, 10, 5)
-
-                tableRow.addView(buildTextView)
-                tableRow.addView(timeTextView)
-                tableRow.addView(statusTextView)
-
-                tableLayout.addView(tableRow)
-
-                val spacerRow = TableRow(this)
-                spacerRow.setPadding(0, 20, 0, 20)
-                tableLayout.addView(spacerRow)
+                createSecurityTableOnDate(year, month, dayOfMonth, dateTV, securityEvents)
             }
-        })
-
+        }
 
         val arrow_button= findViewById<View>(R.id.arrow_back)
         arrow_button.setOnClickListener {
             val intent = Intent(this@security_activity, profile_activity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun createSecurityTableOnDate(year: Int, month: Int, dayOfMonth: Int, dateTV: TextView, securityEvents: List <SecurityEvent>?) {
+
+        val tableLayout = findViewById<TableLayout>(R.id.security_tableLayout)
+
+        securityEvents?.forEach { event ->
+            val tableRow = TableRow(this)
+            tableRow.setBackgroundResource(R.drawable.table_border)
+            tableRow.setPadding(7, 7, 5, 7)
+
+            val timeTextView = TextView(this)
+            timeTextView.text = event.time?.substring(0, 8)
+            timeTextView.setTextColor(Color.BLACK)
+            timeTextView.gravity = Gravity.CENTER
+            timeTextView.setPadding(30, 15, 5, 15)
+            timeTextView.textSize = 16f
+
+            val buildTextView = TextView(this)
+            buildTextView.text = event.build
+            buildTextView.setTextColor(Color.BLACK)
+            buildTextView.gravity = Gravity.START
+            buildTextView.setPadding(30, 15, 5, 15)
+            buildTextView.textSize = 16f
+
+            val statusTextView = TextView(this)
+            statusTextView.text = event.status
+            statusTextView.setTextColor(Color.BLACK)
+            statusTextView.gravity = Gravity.END
+            statusTextView.textSize = 16f
+            statusTextView.setPadding(80, 15, 10, 5)
+
+            tableRow.addView(buildTextView)
+            tableRow.addView(timeTextView)
+            tableRow.addView(statusTextView)
+
+            tableLayout.addView(tableRow)
+
+            val spacerRow = TableRow(this)
+            spacerRow.setPadding(0, 20, 0, 20)
+            tableLayout.addView(spacerRow)
         }
     }
 }

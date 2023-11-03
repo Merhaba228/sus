@@ -4,6 +4,7 @@ import com.example.loginapp.activity.logic.auth.retrofit.dto.SecurityEvent
 import com.example.loginapp.activity.logic.auth.retrofit.dto.User
 import com.example.loginapp.activity.logic.auth.retrofit.dto.Token
 import com.example.loginapp.activity.logic.auth.retrofit.dto.Student
+import com.example.sus.activity.logic.auth.retrofit.dto.StudentTimeTable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -23,6 +24,12 @@ interface MrsuApi {
         @Header("Authorization") authorization: String,
         @Query("date") date: String
     ): List<SecurityEvent>
+
+    @GET("v1/StudentTimeTable")
+    suspend fun getStudentTimeTable(
+        @Header("Authorization") authorization: String,
+        @Query("date") date: String
+    ): List<StudentTimeTable>
 
     @FormUrlEncoded
     @POST("OAuth/token")

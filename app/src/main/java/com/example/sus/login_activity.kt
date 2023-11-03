@@ -86,6 +86,9 @@ class login_activity : AppCompatActivity() {
                     val securityEvents = userApi.getSecurityEvents("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
                     sharedPrefManager.saveSecurityEvents(securityEvents)
 
+                    val studentTimeTable = userApi.getStudentTimeTable("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
+                    sharedPrefManager.saveStudentTimeTable(studentTimeTable)
+
                     runOnUiThread {
                         performActionsAfterAuthentication()
                     }

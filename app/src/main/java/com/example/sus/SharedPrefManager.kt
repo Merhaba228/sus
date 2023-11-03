@@ -1,9 +1,8 @@
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.loginapp.activity.logic.auth.retrofit.api.MrsuApi
-import com.example.loginapp.activity.logic.auth.retrofit.dto.User
-import com.example.loginapp.activity.logic.auth.retrofit.dto.SecurityEvent
-import com.example.loginapp.activity.logic.auth.retrofit.dto.Student
+import com.example.loginapp.activity.logic.auth.retrofit.api.*
+import com.example.loginapp.activity.logic.auth.retrofit.dto.*
+import com.example.sus.activity.logic.auth.retrofit.dto.*
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +24,7 @@ object SharedPrefManager {
     private const val STUDENT_DATA = "student_data"
     private const val USER_DATA = "user_data"
     private const val SECURITY_EVENTS = "security_events"
+    private const val STUDENT_TIME_TABLE = "student_time_table"
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var instance: SharedPrefManager
@@ -54,6 +54,7 @@ object SharedPrefManager {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
+
                 val userToken = tokenApi.getNewToken(refreshToken = refreshToken)
                 saveTokens(userToken.accessToken, userToken.refreshToken)
 
@@ -63,8 +64,11 @@ object SharedPrefManager {
                 val refreshedStudentData = userApi.getStudent("Bearer ${userToken.accessToken}")
                 saveStudentData(refreshedStudentData)
 
-                val securityEvents = userApi.getSecurityEvents("Bearer ${userToken.accessToken}","2023-10-20")
+                val securityEvents = userApi.getSecurityEvents("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
                 saveSecurityEvents(securityEvents)
+
+                val studentTimeTable = userApi.getStudentTimeTable("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
+                saveStudentTimeTable(studentTimeTable)
 
             } catch (e: Exception) {
 
@@ -132,7 +136,22 @@ object SharedPrefManager {
         return Gson().fromJson(jsonSecurityEvents, type)
     }
 
-    fun refreshCalendarDateUsingRefreshToken(refreshToken: String, date: String) {
+    fun saveStudentTimeTable(studentTimeTable: List<StudentTimeTable>) {
+        val jsonStudentTimeTable = Gson().toJson(studentTimeTable)
+        sharedPreferences.edit().apply {
+            putString(STUDENT_TIME_TABLE, jsonStudentTimeTable)
+            apply()
+        }
+    }
+
+    // Метод для получения списка StudentTimeTable
+    fun getStudentTimeTable(): List<StudentTimeTable>? {
+        val jsonStudentTimeTable = sharedPreferences.getString(STUDENT_TIME_TABLE, null)
+        val type: Type = object : TypeToken<List<StudentTimeTable>>() {}.type
+        return Gson().fromJson(jsonStudentTimeTable, type)
+    }
+
+    fun refreshCalendarDateUsingRefreshToken(refreshToken: String, date: String, callback: (List<SecurityEvent>) -> Unit) {
         val BASE_URL_TOKEN = "https://p.mrsu.ru"
         val BASE_URL_USER = "https://papi.mrsu.ru"
 
@@ -147,11 +166,13 @@ object SharedPrefManager {
                 val refreshedSecurityEvents = userApi.getSecurityEvents("Bearer ${userToken.accessToken}", date)
                 saveSecurityEvents(refreshedSecurityEvents)
 
+                callback(refreshedSecurityEvents)
             } catch (e: Exception) {
-
+                e.printStackTrace()
             }
         }
     }
+
 
     fun getRefreshToken(): String? {
         return sharedPreferences.getString(REFRESH_TOKEN, null)
