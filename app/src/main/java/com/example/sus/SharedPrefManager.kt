@@ -67,7 +67,7 @@ object SharedPrefManager {
                 val securityEvents = userApi.getSecurityEvents("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
                 saveSecurityEvents(securityEvents)
 
-                val studentTimeTable = userApi.getStudentTimeTable("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
+                val studentTimeTable = userApi.getStudentTimeTable("Bearer ${userToken.accessToken}", "2023-11-04")
                 saveStudentTimeTable(studentTimeTable)
 
             } catch (e: Exception) {
