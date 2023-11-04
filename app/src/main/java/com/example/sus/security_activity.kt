@@ -41,7 +41,7 @@ class security_activity : AppCompatActivity() {
         val currentDate = Calendar.getInstance()
         val securityEvents = SharedPrefManager.getSecurityEvents()
 
-        createSecurityTableOnDate( Date().year, Date().month.toInt(), Date().day.toInt(), dateTV, securityEvents)
+        createSecurityTableOnDate(securityEvents)
         dateTV.text = SimpleDateFormat("yyyy-MM-dd", Locale("ru")).format(Date())
         calendarView.setDate(currentDate.timeInMillis)
 
@@ -62,7 +62,7 @@ class security_activity : AppCompatActivity() {
                     }
                 }
 
-                createSecurityTableOnDate(year, month, dayOfMonth, dateTV, securityEvents)
+                createSecurityTableOnDate(securityEvents)
             }
         }
 
@@ -73,7 +73,7 @@ class security_activity : AppCompatActivity() {
         }
     }
 
-    private fun createSecurityTableOnDate(year: Int, month: Int, dayOfMonth: Int, dateTV: TextView, securityEvents: List <SecurityEvent>?) {
+    private fun createSecurityTableOnDate(securityEvents: List <SecurityEvent>?) {
 
         val tableLayout = findViewById<TableLayout>(R.id.security_tableLayout)
 

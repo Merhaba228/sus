@@ -173,6 +173,33 @@ object SharedPrefManager {
         }
     }
 
+    fun refreshTimeTableDateUsingRefreshToken(
+        refreshToken: String,
+        date: String,
+        callback: (List<StudentTimeTable>) -> Unit
+    ) {
+        val BASE_URL_TOKEN = "https://p.mrsu.ru"
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+
+        val tokenApi = createRetrofitApi(BASE_URL_TOKEN)
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val userToken = tokenApi.getNewToken(refreshToken = refreshToken)
+                saveTokens(userToken.accessToken, userToken.refreshToken)
+
+                val refreshedStudentTimeTable = userApi.getStudentTimeTable("Bearer ${userToken.accessToken}", date)
+                saveStudentTimeTable(refreshedStudentTimeTable)
+
+                callback(refreshedStudentTimeTable)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+
 
     fun getRefreshToken(): String? {
         return sharedPreferences.getString(REFRESH_TOKEN, null)

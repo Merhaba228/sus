@@ -1,7 +1,6 @@
 package com.example.sus
 
 import SharedPrefManager
-import android.annotation.SuppressLint
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import android.content.Intent
@@ -10,18 +9,24 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
 import android.widget.CalendarView
-import android.view.ViewGroup
 import android.graphics.Color
-import android.widget.CalendarView.OnDateChangeListener
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sus.activity.logic.auth.retrofit.dto.StudentTimeTable
-import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Locale
 import android.text.TextUtils
+import com.example.loginapp.activity.logic.auth.retrofit.dto.SecurityEvent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+
 
 class timetable_activity : AppCompatActivity() {
     private lateinit var dateTV: TextView
@@ -29,7 +34,6 @@ class timetable_activity : AppCompatActivity() {
     private lateinit var tableLayout: TableLayout
 
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main4)
@@ -39,29 +43,40 @@ class timetable_activity : AppCompatActivity() {
         val configuration = resources.configuration
         configuration.locale = locale
         resources.updateConfiguration(configuration, resources.displayMetrics)
-
         dateTV = findViewById(R.id.idTVDate)
         tableLayout = findViewById(R.id.timetable_tableLayout)
+        calendarView = findViewById(R.id.calendarView)
+
         SharedPrefManager.getInstance(this)
+            .refreshDataUsingRefreshToken(SharedPrefManager.getRefreshToken().toString())
+
         val studentTimeTable = SharedPrefManager.getStudentTimeTable()
 
-        populateTimeTable(studentTimeTable)
+        createTimeTable(studentTimeTable)
 
-//        calendarView.setOnDateChangeListener(OnDateChangeListener { _, year, month, dayOfMonth ->
-//            val calendar = Calendar.getInstance()
-//            calendar.set(year, month, dayOfMonth)
-//
-//            val dateFormat = SimpleDateFormat("d MMMM", Locale("ru"))
-//            val formattedDate = dateFormat.format(calendar.time)
-//            dateTV.text = formattedDate
-//
-//            val studentTimeTable = SharedPrefManager.getStudentTimeTable()
-//
-//            populateTimeTable(studentTimeTable)
-//        })
+        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            tableLayout.removeAllViews()
+            val calendar = Calendar.getInstance()
+            calendar.set(year, month, dayOfMonth)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
+            val formattedDate = dateFormat.format(calendar.time)
+            dateTV.text = formattedDate
 
-        SharedPrefManager.getInstance(this)
+            CoroutineScope(Dispatchers.Main).launch {
+                val refreshToken = SharedPrefManager.getRefreshToken().toString()
 
+                val studentTimeTable: List<StudentTimeTable> = suspendCoroutine { continuation ->
+                    SharedPrefManager.refreshTimeTableDateUsingRefreshToken(
+                        refreshToken,
+                        formattedDate
+                    ) { studentTimeTable ->
+                        continuation.resume(studentTimeTable)
+                    }
+                }
+
+                createTimeTable(studentTimeTable)
+            }
+        }
 
         val button3 = findViewById<View>(R.id.back_button)
         button3.setOnClickListener {
@@ -70,21 +85,55 @@ class timetable_activity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("ResourceAsColor")
-    private fun populateTimeTable(studentTimeTable: List<StudentTimeTable>?) {
+    private fun createTimeTable(studentTimeTable: List<StudentTimeTable>?) {
         tableLayout.removeAllViews()
-        val paddingInPixels = 5
+        val paddingInPixels = 20
         val paddingInDp = paddingInPixels.convertPixelsToDp(this)
         val fontSize = 14f
+
+        fun addEmptyRow(lessonNumber: Int) {
+            val emptyRow = TableRow(this)
+            emptyRow.setBackgroundResource(R.drawable.table_border)
+
+            val emptyCell = TextView(this)
+            emptyCell.text = lessonNumber.toString()
+            emptyCell.setTextColor(ContextCompat.getColor(this, R.color.white))
+            emptyCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
+            emptyCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
+            emptyCell.setBackgroundResource(R.drawable.timetable_table_id_cell_border)
+
+            val emptyCellLayoutParams = TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.WRAP_CONTENT
+            )
+            emptyCell.setLayoutParams(emptyCellLayoutParams)
+
+            emptyRow.addView(emptyCell)
+
+            val emptyTitleCell = TextView(this)
+            emptyTitleCell.text = ""
+            emptyTitleCell.layoutParams = TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT
+            )
+            emptyTitleCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
+            emptyTitleCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
+
+            emptyRow.addView(emptyTitleCell)
+
+            tableLayout.addView(emptyRow)
+        }
 
         studentTimeTable?.let { timeTableList ->
             var prevGroupName = ""
             var prevLessonNumber = -1
             var lessonIndex = 1
+            var maxLessonNumber = -1
 
             for (studentTimeTable in timeTableList) {
                 val groupName = studentTimeTable.group
                 val timeTable = studentTimeTable.timeTable
+
 
                 if (groupName != prevGroupName) {
                     val separatorRow = TableRow(this)
@@ -131,142 +180,96 @@ class timetable_activity : AppCompatActivity() {
                     TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM
                 )
 
-
                 groupRow.setBackgroundResource(R.color.violet1)
 
                 groupRow.addView(facultyCell)
 
                 tableLayout.addView(groupRow)
 
+                if (timeTable.lessons.isEmpty()) {
+                    continue
+                }
+
+                if (timeTable.lessons.isNotEmpty()) {
+                    val firstLessonNumber = timeTable.lessons[0].number.toInt()
+                    if (firstLessonNumber > 1) {
+                        for (i in 1 until firstLessonNumber) {
+                            addEmptyRow(i)
+                        }
+                    }
+                }
+
                 for (lesson in timeTable.lessons) {
                     if (lesson.disciplines.isEmpty()) {
-                        val emptyRow = TableRow(this)
-                        emptyRow.setBackgroundResource(R.drawable.table_border)
-
-                        val emptyCell = TextView(this)
-                        emptyCell.text = lesson.number.toString()
-                        emptyCell.setTextColor(ContextCompat.getColor(this, R.color.white))
-                        emptyCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
-                        emptyCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
-                        emptyCell.setBackgroundResource(R.color.violet1)
-
-                        val emptyCellLayoutParams = TableRow.LayoutParams(
-                            TableRow.LayoutParams.WRAP_CONTENT,
-                            TableRow.LayoutParams.WRAP_CONTENT
-                        )
-                        emptyCell.setLayoutParams(emptyCellLayoutParams)
-
-                        emptyRow.addView(emptyCell)
-
-                        val emptyTitleCell = TextView(this)
-                        emptyTitleCell.setSingleLine(false)
-                        emptyTitleCell.setEllipsize(TextUtils.TruncateAt.END)
-                        emptyTitleCell.text = ""
-                        emptyTitleCell.layoutParams = TableRow.LayoutParams(
-                            TableRow.LayoutParams.MATCH_PARENT,
-                            TableRow.LayoutParams.WRAP_CONTENT
-                        )
-                        emptyTitleCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
-                        emptyTitleCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
-
-                        emptyRow.addView(emptyTitleCell)
-
-                        tableLayout.addView(emptyRow)
+                        addEmptyRow(lesson.number.toInt())
                         continue
+                    }
+
+                    if (maxLessonNumber != -1 && lesson.number - maxLessonNumber > 1) {
+                        for (i in maxLessonNumber + 1 until lesson.number) {
+                            addEmptyRow(i)
+                        }
                     }
 
                     for (discipline in lesson.disciplines) {
                         val lessonRow = TableRow(this)
                         lessonRow.setBackgroundResource(R.drawable.table_border)
 
-                        if (prevLessonNumber != -1 && lesson.number - prevLessonNumber > 1) {
-                            // Add empty rows for intermediate lesson numbers
-                            for (i in prevLessonNumber + 1 until lesson.number) {
-                                val emptyRow = TableRow(this)
-                                emptyRow.setBackgroundResource(R.drawable.table_border)
-
-                                val emptyCell = TextView(this)
-                                emptyCell.text = i.toString()
-                                emptyCell.setTextColor(ContextCompat.getColor(this, R.color.white))
-                                emptyCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
-                                emptyCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
-                                emptyCell.setBackgroundResource(R.color.violet1)
-
-                                val emptyCellLayoutParams = TableRow.LayoutParams(
-                                    TableRow.LayoutParams.WRAP_CONTENT,
-                                    TableRow.LayoutParams.WRAP_CONTENT
-                                )
-                                emptyCell.setLayoutParams(emptyCellLayoutParams)
-
-                                emptyRow.addView(emptyCell)
-
-                                val emptyTitleCell = TextView(this)
-                                emptyTitleCell.setSingleLine(false)
-                                emptyTitleCell.setEllipsize(TextUtils.TruncateAt.END)
-                                emptyTitleCell.text = ""
-                                emptyTitleCell.layoutParams = TableRow.LayoutParams(
-                                    TableRow.LayoutParams.MATCH_PARENT,
-                                    TableRow.LayoutParams.WRAP_CONTENT
-                                )
-                                emptyTitleCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
-                                emptyTitleCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
-
-                                emptyRow.addView(emptyTitleCell)
-
-                                tableLayout.addView(emptyRow)
-                            }
-                        }
-
                         val idCell = TextView(this)
-                        idCell.text = "${lesson.number.toString()}\n"
+                        idCell.text = lesson.number.toString()
                         idCell.setBackgroundResource(R.drawable.timetable_table_id_cell_border)
                         idCell.setTextColor(ContextCompat.getColor(this, R.color.white))
                         idCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
                         idCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
 
-                        val idCellLayoutParams = TableRow.LayoutParams(
-                            TableRow.LayoutParams.WRAP_CONTENT,
-                            TableRow.LayoutParams.WRAP_CONTENT
-                        )
-                        idCell.setLayoutParams(idCellLayoutParams)
-
                         lessonRow.addView(idCell)
-                        lessonIndex++
 
                         val titleCell = TextView(this)
                         titleCell.text =
-                            " ${discipline.title}\n [к.${discipline.auditorium.campusId.toString()[0]} ${discipline.auditorium.number}] (${discipline.teacher.userName})"
-                        titleCell.layoutParams = TableRow.LayoutParams(
-                            TableRow.LayoutParams.MATCH_PARENT,
-                            TableRow.LayoutParams.WRAP_CONTENT
+                            "${discipline.title}\n[к.${discipline.auditorium.campusId.toString()[0]} ${discipline.auditorium.number}] (${discipline.teacher.userName})"
+
+                        TextViewCompat.setAutoSizeTextTypeWithDefaults(
+                            titleCell,
+                            TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM
                         )
+
+                        titleCell.setMaxWidth(this)
                         titleCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
                         titleCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
-                        titleCell.setMaxWidth(this)
 
                         lessonRow.addView(titleCell)
-
-
                         tableLayout.addView(lessonRow)
-
-                        prevLessonNumber = lesson.number.toInt()
                     }
+                    if (lesson.number > maxLessonNumber) {
+                        maxLessonNumber = lesson.number.toInt()
+                    }
+
+                }
+                val MAX_LESSON_NUMBER = studentTimeTable.timeTable.lessons.maxOfOrNull { it.number } ?: 0
+
+                if (maxLessonNumber < MAX_LESSON_NUMBER) {
+                    for (i in maxLessonNumber + 1..MAX_LESSON_NUMBER) {
+                        addEmptyRow(i)
+                    }
+
+                }
                 }
             }
         }
     }
+
 
     private fun Int.convertPixelsToDp(context: Context): Int {
         val scale = context.resources.displayMetrics.density
         return (this / scale + 0.5f).toInt()
     }
 
-    fun TextView.setMaxWidth(context: Context) {
-        val maxWidth = (context.resources.displayMetrics.widthPixels * 0.75).toInt()
+    private fun TextView.setMaxWidth(context: Context) {
+        val maxWidth = (context.resources.displayMetrics.widthPixels * 0.73).toInt()
         this.maxWidth = maxWidth
     }
 
-}
+
 
 
 
