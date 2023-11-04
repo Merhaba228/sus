@@ -4,4 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="violet1">#FF3700B3</color>
     <color name="bluelet1">#3F51B5</color>
+    <color name="azure">#F0FFFF</color>
+    <color name="purple">#800080</color>
+    <color name="lavender">#E6E6FA</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="amethyst">#9966CC</color>
 </resources>
