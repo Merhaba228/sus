@@ -3,26 +3,26 @@ package com.example.sus
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
-import android.graphics.Color
-import android.view.Gravity
-import android.widget.CalendarView
-import android.widget.ProgressBar
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import android.widget.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import com.example.loginapp.activity.logic.auth.retrofit.dto.SecurityEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
+import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
+import android.view.ViewGroup
+import android.view.LayoutInflater
 
 class security_activity : AppCompatActivity() {
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: SecurityEventAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main6)
@@ -36,18 +36,20 @@ class security_activity : AppCompatActivity() {
         SharedPrefManager.getInstance(this)
 
         val dateTV = findViewById<TextView>(R.id.idTVDate)
-        val tableLayout = findViewById<TableLayout>(R.id.security_tableLayout)
+        recyclerView = findViewById<RecyclerView>(R.id.security_recyclerView)
         val calendarView = findViewById<CalendarView>(R.id.calendarView)
 
         val currentDate = Calendar.getInstance()
         val securityEvents = SharedPrefManager.getSecurityEvents()
 
-        createSecurityTableOnDate(securityEvents)
+        adapter = SecurityEventAdapter(securityEvents)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
         dateTV.text = SimpleDateFormat("yyyy-MM-dd", Locale("ru")).format(Date())
         calendarView.setDate(currentDate.timeInMillis)
 
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            tableLayout.removeAllViews()
             val calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
@@ -64,57 +66,47 @@ class security_activity : AppCompatActivity() {
                     }
                 }
 
-                createSecurityTableOnDate(securityEvents)
                 loadingIndicator.visibility = View.GONE
+                adapter.updateSecurityEvents(securityEvents)
+
             }
         }
 
-        val arrow_button= findViewById<View>(R.id.arrow_back)
+        val arrow_button = findViewById<View>(R.id.arrow_back)
         arrow_button.setOnClickListener {
             val intent = Intent(this@security_activity, profile_activity::class.java)
             startActivity(intent)
         }
     }
+}
 
-    private fun createSecurityTableOnDate(securityEvents: List <SecurityEvent>?) {
+class SecurityEventAdapter(private var securityEvents: List<SecurityEvent>?) : RecyclerView.Adapter<SecurityEventAdapter.SecurityEventViewHolder>() {
+    inner class SecurityEventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val timeTextView: TextView = itemView.findViewById(R.id.timeTextView)
+        val buildTextView: TextView = itemView.findViewById(R.id.buildTextView)
+        val statusTextView: TextView = itemView.findViewById(R.id.statusTextView)
+    }
 
-        val tableLayout = findViewById<TableLayout>(R.id.security_tableLayout)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SecurityEventViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.security_event_item, parent, false)
+        return SecurityEventViewHolder(itemView)
+    }
 
-        securityEvents?.forEach { event ->
-            val tableRow = TableRow(this)
-            tableRow.setBackgroundResource(R.drawable.table_border)
-            tableRow.setPadding(7, 7, 5, 7)
+    override fun onBindViewHolder(holder: SecurityEventViewHolder, position: Int) {
+        val event = securityEvents!![position]
 
-            val timeTextView = TextView(this)
-            timeTextView.text = event.time?.substring(0, 8)
-            timeTextView.setTextColor(Color.BLACK)
-            timeTextView.gravity = Gravity.CENTER
-            timeTextView.setPadding(30, 15, 5, 15)
-            timeTextView.textSize = 16f
+        holder.timeTextView.text = event.time?.substring(0, 8)
+        holder.buildTextView.text = event.build
+        holder.statusTextView.text = event.status
+    }
 
-            val buildTextView = TextView(this)
-            buildTextView.text = event.build
-            buildTextView.setTextColor(Color.BLACK)
-            buildTextView.gravity = Gravity.START
-            buildTextView.setPadding(30, 15, 5, 15)
-            buildTextView.textSize = 16f
+    override fun getItemCount(): Int {
+        Log.d("size_recycler",securityEvents!!.size.toString() )
+        return securityEvents!!.size
+    }
 
-            val statusTextView = TextView(this)
-            statusTextView.text = event.status
-            statusTextView.setTextColor(Color.BLACK)
-            statusTextView.gravity = Gravity.END
-            statusTextView.textSize = 16f
-            statusTextView.setPadding(80, 15, 10, 5)
-
-            tableRow.addView(buildTextView)
-            tableRow.addView(timeTextView)
-            tableRow.addView(statusTextView)
-
-            tableLayout.addView(tableRow)
-
-            val spacerRow = TableRow(this)
-            spacerRow.setPadding(0, 20, 0, 20)
-            tableLayout.addView(spacerRow)
-        }
+    fun updateSecurityEvents(events: List<SecurityEvent>) {
+        securityEvents = events
+        notifyDataSetChanged()
     }
 }

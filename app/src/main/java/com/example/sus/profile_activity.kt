@@ -19,10 +19,12 @@ class profile_activity : AppCompatActivity() {
 
         val emailTextView: TextView = findViewById(R.id.textView9)
         val studentIDTextView: TextView = findViewById(R.id.textView10)
+        val birthDateTextView: TextView = findViewById(R.id.textView11)
         val profilePictureImageView: ImageView = findViewById(R.id.imageView_profile)
 
         emailTextView.text = SharedPrefManager.getUserData()?.email
         studentIDTextView.text = "ID: ${SharedPrefManager.getUserData()?.studentCod}"
+        birthDateTextView.text = "День рождения: ${SharedPrefManager.getUserData()?.birthDate}"
 
         val profilePhotoUrl = SharedPrefManager.getUserData()?.photo?.urlMedium
 
@@ -31,7 +33,6 @@ class profile_activity : AppCompatActivity() {
             .transform(CircleCrop())
             .placeholder(R.drawable.cot_profile)
             .into(profilePictureImageView)
-
 
         val button = findViewById<View>(R.id.back_button)
         button.setOnClickListener {
