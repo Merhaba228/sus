@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.graphics.Color
 import android.view.Gravity
 import android.widget.CalendarView
+import android.widget.ProgressBar
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -53,16 +54,18 @@ class security_activity : AppCompatActivity() {
             val formattedDate = dateFormat.format(calendar.time)
             dateTV.text = formattedDate
 
+            val loadingIndicator = findViewById<ProgressBar>(R.id.loadingIndicator)
+            loadingIndicator.visibility = View.VISIBLE
             CoroutineScope(Dispatchers.Main).launch {
-                val refreshToken = SharedPrefManager.getRefreshToken().toString()
 
                 val securityEvents: List<SecurityEvent> = suspendCoroutine { continuation ->
-                    SharedPrefManager.refreshCalendarDateUsingRefreshToken(refreshToken, formattedDate) { securityEvents ->
+                    SharedPrefManager.refreshCalendarDateUsingRefreshToken(formattedDate) { securityEvents ->
                         continuation.resume(securityEvents)
                     }
                 }
 
                 createSecurityTableOnDate(securityEvents)
+                loadingIndicator.visibility = View.GONE
             }
         }
 

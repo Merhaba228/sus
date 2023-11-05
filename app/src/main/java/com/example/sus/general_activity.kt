@@ -10,7 +10,7 @@ class general_activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
-        SharedPrefManager.getInstance(this).refreshDataUsingRefreshToken(SharedPrefManager.getRefreshToken().toString())
+        SharedPrefManager.getInstance(this).refreshDataUsingRefreshToken()
 
         val button = findViewById<View>(R.id.back_button)
         button.setOnClickListener()

@@ -15,7 +15,7 @@ class profile_activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main3)
 
-        SharedPrefManager.getInstance(this).refreshDataUsingRefreshToken(SharedPrefManager.getRefreshToken().toString())
+        SharedPrefManager.getInstance(this).refreshDataUsingRefreshToken()
 
         val emailTextView: TextView = findViewById(R.id.textView9)
         val studentIDTextView: TextView = findViewById(R.id.textView10)

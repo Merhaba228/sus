@@ -13,6 +13,7 @@ import android.graphics.Color
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sus.activity.logic.auth.retrofit.dto.StudentTimeTable
 import java.util.Locale
@@ -26,6 +27,7 @@ import java.util.Calendar
 import java.util.Date
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import android.widget.ProgressBar
 
 
 class timetable_activity : AppCompatActivity() {
@@ -47,8 +49,7 @@ class timetable_activity : AppCompatActivity() {
         tableLayout = findViewById(R.id.timetable_tableLayout)
         calendarView = findViewById(R.id.calendarView)
 
-        SharedPrefManager.getInstance(this)
-            .refreshDataUsingRefreshToken(SharedPrefManager.getRefreshToken().toString())
+        SharedPrefManager.getInstance(this).refreshDataUsingRefreshToken()
 
         val studentTimeTable = SharedPrefManager.getStudentTimeTable()
 
@@ -62,12 +63,12 @@ class timetable_activity : AppCompatActivity() {
             val formattedDate = dateFormat.format(calendar.time)
             dateTV.text = formattedDate
 
+           val loadingIndicator = findViewById<ProgressBar>(R.id.loadingIndicator)
+            loadingIndicator.visibility = View.VISIBLE
             CoroutineScope(Dispatchers.Main).launch {
-                val refreshToken = SharedPrefManager.getRefreshToken().toString()
 
                 val studentTimeTable: List<StudentTimeTable> = suspendCoroutine { continuation ->
                     SharedPrefManager.refreshTimeTableDateUsingRefreshToken(
-                        refreshToken,
                         formattedDate
                     ) { studentTimeTable ->
                         continuation.resume(studentTimeTable)
@@ -75,10 +76,11 @@ class timetable_activity : AppCompatActivity() {
                 }
 
                 createTimeTable(studentTimeTable)
+                loadingIndicator.visibility = View.GONE
             }
         }
 
-        val button3 = findViewById<View>(R.id.back_button)
+        val button3 = findViewById<View>(R.id.arrow_back)
         button3.setOnClickListener {
             val intent = Intent(this@timetable_activity, general_activity::class.java)
             startActivity(intent)
@@ -126,8 +128,6 @@ class timetable_activity : AppCompatActivity() {
 
         studentTimeTable?.let { timeTableList ->
             var prevGroupName = ""
-            var prevLessonNumber = -1
-            var lessonIndex = 1
             var maxLessonNumber = -1
 
             for (studentTimeTable in timeTableList) {
@@ -216,7 +216,7 @@ class timetable_activity : AppCompatActivity() {
                         lessonRow.setBackgroundResource(R.drawable.table_border)
 
                         val idCell = TextView(this)
-                        idCell.text = lesson.number.toString()
+                        idCell.text = lesson.number.toString() + "\n"
                         idCell.setBackgroundResource(R.drawable.timetable_table_id_cell_border)
                         idCell.setTextColor(ContextCompat.getColor(this, R.color.white))
                         idCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)

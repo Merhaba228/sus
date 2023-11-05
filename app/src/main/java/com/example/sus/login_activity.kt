@@ -72,8 +72,9 @@ class login_activity : AppCompatActivity() {
 
     private fun handleTokenResponse(userToken: Token, sharedPrefManager: SharedPrefManager, userApi: MrsuApi) {
         if (userToken.accessToken != null) {
-            Log.d("old_token",userToken.accessToken.toString() )
-            sharedPrefManager.saveTokens(userToken.accessToken, userToken.refreshToken)
+            sharedPrefManager.saveToken(userToken)
+            Log.d("exp_time_test", sharedPrefManager.getExpTime().toString())
+            Log.d("current_time", System.currentTimeMillis().toString())
             CoroutineScope(Dispatchers.IO).launch {
                 try {
 
