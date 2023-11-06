@@ -30,7 +30,7 @@ class general_activity : AppCompatActivity() {
         val button3 = findViewById<View>(R.id.timetable_button)
         button3.setOnClickListener()
         {
-            val intent = Intent(this@general_activity, timetable_activity::class.java)
+            val intent = Intent(this@general_activity, TimeTableActivity::class.java)
             startActivity(intent)
         }
 

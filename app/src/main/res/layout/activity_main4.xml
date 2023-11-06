@@ -1,9 +1,8 @@
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/scrollView"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".timetable_activity"
     android:background="@drawable/background_test4">
@@ -52,24 +51,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                app:layout_constraintTop_toTopOf="@id/timetable_tableLayout"
+                app:layout_constraintTop_toTopOf="@id/timetable_recyclerView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:visibility="gone"
                 android:indeterminateDrawable="@drawable/progress_bar_custom_2"
                 />
 
-            <TableLayout
-                android:id="@+id/timetable_tableLayout"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/timetable_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="390dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="25dp"
-                android:gravity="center_horizontal"
-                app:layout_constraintTop_toBottomOf="@id/idTVDate">
-
-            </TableLayout>
+                app:layout_constraintTop_toBottomOf="@id/idTVDate"/>
 
             <TextView
                 android:id="@+id/idTVDate"
@@ -96,9 +92,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textView_timeTable" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     </LinearLayout>
 

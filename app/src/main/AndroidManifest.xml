@@ -37,7 +37,7 @@
             android:name=".actualEvents_activity"
             android:exported="false" />
         <activity
-            android:name=".timetable_activity"
+            android:name=".TimeTableActivity"
             android:exported="false"
             android:label="@string/title_activity_main4"
             android:theme="@style/Theme.Sus" />

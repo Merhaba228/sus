@@ -1,49 +1,65 @@
 package com.example.sus
 
 import SharedPrefManager
-import androidx.core.content.ContextCompat
-import androidx.core.widget.TextViewCompat
-import android.content.Intent
 import android.content.Context
-import android.os.Bundle
-import android.util.TypedValue
-import android.view.View
-import android.widget.CalendarView
+import android.content.Intent
 import android.graphics.Color
-import android.widget.TableLayout
-import android.widget.TableRow
+import android.os.Bundle
+import android.util.Log
+
+import android.util.TypedValue
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.widget.TextViewCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sus.activity.logic.auth.retrofit.dto.StudentTimeTable
-import java.util.Locale
+import android.widget.CalendarView
+import com.example.sus.activity.logic.auth.retrofit.dto.TimeTableLesson
+import com.example.sus.activity.logic.auth.retrofit.dto.TimeTableLessonDiscipline
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import android.widget.ProgressBar
 
-
-class timetable_activity : AppCompatActivity() {
-    private lateinit var dateTV: TextView
+class TimeTableActivity : AppCompatActivity()
+{
+    private lateinit var dateTextView: TextView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var loadingIndicator: ProgressBar
+    private lateinit var timeTableAdapter: TimeTableAdapter
     private lateinit var calendarView: CalendarView
-    private lateinit var tableLayout: TableLayout
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main4)
+
+
+        calendarView = findViewById(R.id.calendarView)
+        dateTextView = findViewById(R.id.idTVDate)
+        recyclerView = findViewById(R.id.timetable_recyclerView)
+        loadingIndicator = findViewById(R.id.loadingIndicator)
+
         val locale = Locale("ru")
         Locale.setDefault(locale)
         val resources = resources
         val configuration = resources.configuration
         configuration.locale = locale
         resources.updateConfiguration(configuration, resources.displayMetrics)
-        dateTV = findViewById(R.id.idTVDate)
-        tableLayout = findViewById(R.id.timetable_tableLayout)
-        calendarView = findViewById(R.id.calendarView)
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        timeTableAdapter = TimeTableAdapter()
+        recyclerView.adapter = timeTableAdapter
 
         SharedPrefManager.getInstance(this).refreshDataUsingRefreshToken()
 
@@ -52,22 +68,18 @@ class timetable_activity : AppCompatActivity() {
         createTimeTable(studentTimeTable)
 
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            tableLayout.removeAllViews()
             val calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
             val formattedDate = dateFormat.format(calendar.time)
-            dateTV.text = formattedDate
+            dateTextView.text = formattedDate
 
-           val loadingIndicator = findViewById<ProgressBar>(R.id.loadingIndicator)
             loadingIndicator.visibility = View.VISIBLE
-            CoroutineScope(Dispatchers.Main).launch {
 
+            CoroutineScope(Dispatchers.Main).launch {
                 val studentTimeTable: List<StudentTimeTable> = suspendCoroutine { continuation ->
-                    SharedPrefManager.refreshTimeTableDateUsingRefreshToken(
-                        formattedDate
-                    ) { studentTimeTable ->
-                        continuation.resume(studentTimeTable)
+                    SharedPrefManager.refreshTimeTableDateUsingRefreshToken(formattedDate) { result ->
+                        continuation.resume(result)
                     }
                 }
 
@@ -78,194 +90,110 @@ class timetable_activity : AppCompatActivity() {
 
         val button3 = findViewById<View>(R.id.arrow_back)
         button3.setOnClickListener {
-            val intent = Intent(this@timetable_activity, general_activity::class.java)
+            val intent = Intent(this@TimeTableActivity, general_activity::class.java)
             startActivity(intent)
         }
     }
 
     private fun createTimeTable(studentTimeTable: List<StudentTimeTable>?) {
-        tableLayout.removeAllViews()
-        val paddingInPixels = 20
-        val paddingInDp = paddingInPixels.convertPixelsToDp(this)
-        val fontSize = 14f
+        studentTimeTable?.let { timeTableList ->
+            timeTableAdapter.submitList(timeTableList)
+        }
+    }
 
-        fun addEmptyRow(lessonNumber: Int) {
-            val emptyRow = TableRow(this)
-            emptyRow.setBackgroundResource(R.drawable.table_border)
+    inner class TimeTableAdapter : RecyclerView.Adapter<TimeTableAdapter.TimeTableViewHolder>() {
+        private var timeTableList: List<StudentTimeTable>? = null
 
-            val emptyCell = TextView(this)
-            emptyCell.text = lessonNumber.toString()
-            emptyCell.setTextColor(ContextCompat.getColor(this, R.color.white))
-            emptyCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
-            emptyCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
-            emptyCell.setBackgroundResource(R.drawable.timetable_table_id_cell_border)
-
-            val emptyCellLayoutParams = TableRow.LayoutParams(
-                TableRow.LayoutParams.WRAP_CONTENT,
-                TableRow.LayoutParams.WRAP_CONTENT
-            )
-            emptyCell.setLayoutParams(emptyCellLayoutParams)
-
-            emptyRow.addView(emptyCell)
-
-            val emptyTitleCell = TextView(this)
-            emptyTitleCell.text = ""
-            emptyTitleCell.layoutParams = TableRow.LayoutParams(
-                TableRow.LayoutParams.MATCH_PARENT,
-                TableRow.LayoutParams.WRAP_CONTENT
-            )
-            emptyTitleCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
-            emptyTitleCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
-
-            emptyRow.addView(emptyTitleCell)
-
-            tableLayout.addView(emptyRow)
+        fun submitList(timeTableList: List<StudentTimeTable>) {
+            this.timeTableList = timeTableList
+            notifyDataSetChanged()
         }
 
-        studentTimeTable?.let { timeTableList ->
-            var prevGroupName = ""
-            var maxLessonNumber = -1
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeTableViewHolder {
+            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_time_table, parent, false)
+            return TimeTableViewHolder(itemView)
+        }
 
-            for (studentTimeTable in timeTableList) {
-                val groupName = studentTimeTable.group
-                val timeTable = studentTimeTable.timeTable
+        override fun onBindViewHolder(holder: TimeTableViewHolder, position: Int) {
+            val studentTimeTable = timeTableList?.get(position)
+            studentTimeTable?.let {
+                holder.bind(it)
+            }
+        }
 
+        override fun getItemCount(): Int {
+            return timeTableList?.size ?: 0
+        }
 
-                if (groupName != prevGroupName) {
-                    val separatorRow = TableRow(this)
-                    val separatorCell = TextView(this)
-                    separatorCell.text = ""
-                    separatorCell.setPadding(0, paddingInDp * 2, 0, paddingInDp * 2)
-                    separatorRow.addView(separatorCell)
-                    tableLayout.addView(separatorRow)
-                    prevGroupName = groupName
-                }
+        inner class TimeTableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            private val groupNameTextView: TextView = itemView.findViewById(R.id.groupNameTextView)
+            private val lessonsRecyclerView: RecyclerView = itemView.findViewById(R.id.lessonsRecyclerView)
 
-                val groupRow = TableRow(this)
-                groupRow.setBackgroundColor(Color.WHITE)
-                val groupLayoutParams = TableRow.LayoutParams(
-                    TableRow.LayoutParams.WRAP_CONTENT,
-                    TableRow.LayoutParams.WRAP_CONTENT
-                )
-                groupLayoutParams.setMargins(7, 7, 7, 7)
-                groupRow.layoutParams = groupLayoutParams
+            fun bind(studentTimeTable: StudentTimeTable) {
+                groupNameTextView.text = "("+ studentTimeTable.group + ") " + studentTimeTable.facultyName
 
-                val groupCell = TextView(this)
-                groupCell.text = " (${groupName}) \n"
-                groupCell.setTextColor(ContextCompat.getColor(this, R.color.white))
-                groupCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
-                groupCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
+                lessonsRecyclerView.layoutManager = LinearLayoutManager(itemView.context)
+                val lessonAdapter = LessonAdapter()
+                lessonsRecyclerView.adapter = lessonAdapter
+                val lessonDisciplines = mutableListOf<Pair<TimeTableLessonDiscipline?, Int>>()
+                val maxSecond = studentTimeTable.timeTable.lessons.map { it.number.toInt() }.maxOrNull() ?: 0
 
-                val groupCellLayoutParams = TableRow.LayoutParams(
-                    TableRow.LayoutParams.WRAP_CONTENT,
-                    TableRow.LayoutParams.WRAP_CONTENT
-                )
-                groupCell.setLayoutParams(groupCellLayoutParams)
-
-                groupRow.addView(groupCell)
-
-                val facultyCell = TextView(this)
-                facultyCell.text = studentTimeTable.facultyName
-                facultyCell.setTextColor(ContextCompat.getColor(this, R.color.white))
-                facultyCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
-                facultyCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
-                facultyCell.setMaxWidth(this)
-
-                TextViewCompat.setAutoSizeTextTypeWithDefaults(
-                    facultyCell,
-                    TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM
-                )
-
-                groupRow.setBackgroundResource(R.color.violet1)
-
-                groupRow.addView(facultyCell)
-
-                tableLayout.addView(groupRow)
-
-                if (timeTable.lessons.isEmpty()) {
-                    continue
-                }
-
-                if (timeTable.lessons.isNotEmpty()) {
-                    val firstLessonNumber = timeTable.lessons[0].number.toInt()
-                    if (firstLessonNumber > 1) {
-                        for (i in 1 until firstLessonNumber) {
-                            addEmptyRow(i)
+                for (i in 1..maxSecond) {
+                    val found = studentTimeTable.timeTable.lessons.find { it.number.toInt() == i }
+                    if (found == null) {
+                        lessonDisciplines.add(Pair(null, i))
+                    } else {
+                        for (discipline in found.disciplines) {
+                            lessonDisciplines.add(discipline to i)
                         }
                     }
                 }
 
-                for (lesson in timeTable.lessons) {
-                    if (lesson.disciplines.isEmpty()) {
-                        addEmptyRow(lesson.number.toInt())
-                        continue
-                    }
+                lessonAdapter.submitList(lessonDisciplines.toList())
+            }
+        }
 
-                    if (maxLessonNumber != -1 && lesson.number - maxLessonNumber > 1) {
-                        for (i in maxLessonNumber + 1 until lesson.number) {
-                            addEmptyRow(i)
-                        }
-                    }
+    }
 
-                    for (discipline in lesson.disciplines) {
-                        val lessonRow = TableRow(this)
-                        lessonRow.setBackgroundResource(R.drawable.table_border)
+    inner class LessonAdapter : RecyclerView.Adapter<LessonAdapter.LessonViewHolder>() {
+        private var lessonList: List<Pair<TimeTableLessonDiscipline?, Int>> = listOf()
 
-                        val idCell = TextView(this)
-                        idCell.text = lesson.number.toString() + "\n"
-                        idCell.setBackgroundResource(R.drawable.timetable_table_id_cell_border)
-                        idCell.setTextColor(ContextCompat.getColor(this, R.color.white))
-                        idCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
-                        idCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
+        fun submitList(lessonList: List<Pair<TimeTableLessonDiscipline?, Int>>) {
+            this.lessonList = lessonList
+            notifyDataSetChanged()
+        }
 
-                        lessonRow.addView(idCell)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonViewHolder {
+            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_lesson, parent, false)
+            return LessonViewHolder(itemView)
+        }
 
-                        val titleCell = TextView(this)
-                        titleCell.text =
-                            "${discipline.title}\n[к.${discipline.auditorium.campusId.toString()[0]} ${discipline.auditorium.number}] (${discipline.teacher.userName})"
+        override fun onBindViewHolder(holder: LessonViewHolder, position: Int) {
+            val lesson = lessonList?.get(position)
+            lesson?.let {
+                holder.bind(it)
+            }
+        }
 
-                        TextViewCompat.setAutoSizeTextTypeWithDefaults(
-                            titleCell,
-                            TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM
-                        )
+        override fun getItemCount(): Int {
+            return lessonList?.size ?: 0
+        }
 
-                        titleCell.setMaxWidth(this)
-                        titleCell.setPadding(paddingInDp, paddingInDp, paddingInDp, paddingInDp)
-                        titleCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
+        inner class LessonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            private val lessonNameTextView: TextView = itemView.findViewById(R.id.lessonNameTextView)
+            private val locationTextView: TextView = itemView.findViewById(R.id.locationTextView)
 
-                        lessonRow.addView(titleCell)
-                        tableLayout.addView(lessonRow)
-                    }
-                    if (lesson.number > maxLessonNumber) {
-                        maxLessonNumber = lesson.number.toInt()
-                    }
+            fun bind(lessonPair: Pair<TimeTableLessonDiscipline?, Int>) {
+                val lesson = lessonPair.first
+                val lessonNumber = lessonPair.second
 
-                }
-                val MAX_LESSON_NUMBER = studentTimeTable.timeTable.lessons.maxOfOrNull { it.number } ?: 0
+                locationTextView.text = lessonNumber?.toString() ?: ""
+                lessonNameTextView.text = if (lesson?.title.isNullOrBlank()) ""
+                else "${lesson?.title}\n[к.${lesson?.auditorium?.campusId?.toString()?.get(0)} ${lesson?.auditorium?.number}] (${lesson?.teacher?.userName})"
 
-                if (maxLessonNumber < MAX_LESSON_NUMBER) {
-                    for (i in maxLessonNumber + 1..MAX_LESSON_NUMBER) {
-                        addEmptyRow(i)
-                    }
-
-                }
-                }
             }
         }
     }
-
-
-    private fun Int.convertPixelsToDp(context: Context): Int {
-        val scale = context.resources.displayMetrics.density
-        return (this / scale + 0.5f).toInt()
-    }
-
-    private fun TextView.setMaxWidth(context: Context) {
-        val maxWidth = (context.resources.displayMetrics.widthPixels * 0.73).toInt()
-        this.maxWidth = maxWidth
-    }
-
-
-
+}
 
 
