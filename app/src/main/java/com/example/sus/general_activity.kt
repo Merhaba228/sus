@@ -12,9 +12,10 @@ class general_activity : AppCompatActivity() {
 
         SharedPrefManager.getInstance(this).refreshDataUsingRefreshToken()
 
-        val button = findViewById<View>(R.id.back_button)
+        val button = findViewById<View>(R.id.exit_button)
         button.setOnClickListener()
         {
+            SharedPrefManager.clearData()
             val intent = Intent(this@general_activity, login_activity::class.java)
             startActivity(intent)
         }

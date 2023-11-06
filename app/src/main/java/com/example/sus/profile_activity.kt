@@ -42,6 +42,7 @@ class profile_activity : AppCompatActivity() {
 
         val button2 = findViewById<View>(R.id.exitButton2)
         button2.setOnClickListener {
+            SharedPrefManager.clearData()
             val intent = Intent(this@profile_activity, login_activity::class.java)
             startActivity(intent)
         }

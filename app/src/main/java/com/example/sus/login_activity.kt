@@ -40,9 +40,10 @@ class login_activity : AppCompatActivity() {
         password = findViewById(R.id.editPassword)
         loginButton = findViewById(R.id.enterButton)
 
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
-        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+        if(sharedPrefManager.getRefreshToken() != null) {
+            sharedPrefManager.refreshDataUsingRefreshToken()
+            performActionsAfterAuthentication()
+        }
 
         val tokenApi = createRetrofitClient(BASE_URL_TOKEN).create(MrsuApi::class.java)
         val userApi = createRetrofitClient(BASE_URL_USER).create(MrsuApi::class.java)
@@ -73,8 +74,7 @@ class login_activity : AppCompatActivity() {
     private fun handleTokenResponse(userToken: Token, sharedPrefManager: SharedPrefManager, userApi: MrsuApi) {
         if (userToken.accessToken != null) {
             sharedPrefManager.saveToken(userToken)
-            Log.d("exp_time_test", sharedPrefManager.getExpTime().toString())
-            Log.d("current_time", System.currentTimeMillis().toString())
+
             CoroutineScope(Dispatchers.IO).launch {
                 try {
 

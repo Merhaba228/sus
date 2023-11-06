@@ -191,15 +191,9 @@ object SharedPrefManager {
     }
 
     fun clearData() {
-        sharedPreferences.edit().apply {
-            remove(ACCESS_TOKEN)
-            remove(REFRESH_TOKEN)
-            remove(USER_DATA)
-            remove(STUDENT_DATA)
-            apply()
+                sharedPreferences.edit().clear().apply()
         }
 
-    }
 
     private fun createRetrofitApi(baseUrl: String): MrsuApi {
         val interceptor = HttpLoggingInterceptor()

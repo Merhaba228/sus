@@ -180,7 +180,7 @@
         tools:ignore="ContentDescription" />
 
     <Button
-        android:id="@+id/back_button"
+        android:id="@+id/exit_button"
         android:layout_width="171dp"
         android:layout_height="48dp"
         android:layout_marginStart="210dp"
