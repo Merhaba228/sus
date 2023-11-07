@@ -7,7 +7,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 
-import android.util.TypedValue
+import android.text.SpannableStringBuilder
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +24,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sus.activity.logic.auth.retrofit.dto.StudentTimeTable
 import android.widget.CalendarView
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.loginapp.activity.logic.auth.retrofit.dto.UserPhoto
+import com.example.sus.activity.logic.auth.retrofit.dto.Schedule
 import com.example.sus.activity.logic.auth.retrofit.dto.TimeTableLesson
 import com.example.sus.activity.logic.auth.retrofit.dto.TimeTableLessonDiscipline
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +38,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import androidx.core.text.HtmlCompat
 import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -64,7 +75,7 @@ class TimeTableActivity : AppCompatActivity()
         SharedPrefManager.getInstance(this).refreshDataUsingRefreshToken()
 
         val studentTimeTable = SharedPrefManager.getStudentTimeTable()
-
+        dateTextView.text = SimpleDateFormat("dd MMMM yyyy", Locale("ru")).format(Date())
         createTimeTable(studentTimeTable)
 
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
@@ -72,7 +83,7 @@ class TimeTableActivity : AppCompatActivity()
             calendar.set(year, month, dayOfMonth)
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
             val formattedDate = dateFormat.format(calendar.time)
-            dateTextView.text = formattedDate
+            dateTextView.text = SimpleDateFormat("dd MMMM yyyy", Locale("ru")).format(calendar.time)
 
             loadingIndicator.visibility = View.VISIBLE
 
@@ -130,7 +141,7 @@ class TimeTableActivity : AppCompatActivity()
             private val lessonsRecyclerView: RecyclerView = itemView.findViewById(R.id.lessonsRecyclerView)
 
             fun bind(studentTimeTable: StudentTimeTable) {
-                groupNameTextView.text = "("+ studentTimeTable.group + ") " + studentTimeTable.facultyName
+                groupNameTextView.text = studentTimeTable.facultyName + " (" + studentTimeTable.group + " г.)"
 
                 lessonsRecyclerView.layoutManager = LinearLayoutManager(itemView.context)
                 val lessonAdapter = LessonAdapter()
@@ -187,9 +198,25 @@ class TimeTableActivity : AppCompatActivity()
                 val lesson = lessonPair.first
                 val lessonNumber = lessonPair.second
 
-                locationTextView.text = lessonNumber?.toString() ?: ""
-                lessonNameTextView.text = if (lesson?.title.isNullOrBlank()) ""
-                else "${lesson?.title}\n[к.${lesson?.auditorium?.campusId?.toString()?.get(0)} ${lesson?.auditorium?.number}] (${lesson?.teacher?.userName})"
+                locationTextView.text = " ${lessonNumber}. ${Schedule.getByNumber(lessonNumber)?.time}"
+                val spannableBuilder = SpannableStringBuilder()
+                if (lesson?.title?.isNotBlank() == true) {
+                    val formattedTitle = SpannableString(lesson.title)
+                    formattedTitle.setSpan(StyleSpan(Typeface.BOLD), 0, formattedTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    spannableBuilder.append(formattedTitle)
+                    spannableBuilder.append("\n")
+                    spannableBuilder.append("[к.${lesson?.auditorium?.campusId?.toString()?.get(0)} ${lesson?.auditorium?.number}] (${lesson?.teacher?.userName})")
+                    lessonNameTextView.text = spannableBuilder
+
+                    val teacherPhoto: ImageView = itemView.findViewById(R.id.teacher_image)
+                    val profilePhotoUrl = lesson?.teacher?.photo?.urlSmall
+                    Glide.with(itemView.context)
+                        .load(profilePhotoUrl)
+                        .placeholder(R.drawable.cot_profile)
+                        .transform(RoundedCorners(100))
+                        .into(teacherPhoto)
+                }
+                    else lessonNameTextView.text = "(Пара отсутствует)"
 
             }
         }
