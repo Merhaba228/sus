@@ -14,43 +14,10 @@ class profile_activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main3)
+            val fragment = profile1()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, fragment)
+                .commit()
 
-        SharedPrefManager.getInstance(this).refreshDataUsingRefreshToken()
-
-        val emailTextView: TextView = findViewById(R.id.textView9)
-        val studentIDTextView: TextView = findViewById(R.id.textView10)
-        val birthDateTextView: TextView = findViewById(R.id.textView11)
-        val profilePictureImageView: ImageView = findViewById(R.id.imageView_profile)
-
-        emailTextView.text = SharedPrefManager.getUserData()?.email
-        studentIDTextView.text = "ID: ${SharedPrefManager.getUserData()?.studentCod}"
-        birthDateTextView.text = "День рождения: ${SharedPrefManager.getUserData()?.birthDate}"
-
-        val profilePhotoUrl = SharedPrefManager.getUserData()?.photo?.urlMedium
-
-        Glide.with(this)
-            .load(profilePhotoUrl)
-            .transform(CircleCrop())
-            .placeholder(R.drawable.cot_profile)
-            .into(profilePictureImageView)
-
-        val button = findViewById<View>(R.id.back_button)
-        button.setOnClickListener {
-            val intent = Intent(this@profile_activity, general_activity::class.java)
-            startActivity(intent)
-        }
-
-        val button2 = findViewById<View>(R.id.exitButton2)
-        button2.setOnClickListener {
-            SharedPrefManager.clearData()
-            val intent = Intent(this@profile_activity, login_activity::class.java)
-            startActivity(intent)
-        }
-
-        val button3 = findViewById<View>(R.id.turnstiles_button)
-        button3.setOnClickListener {
-            val intent = Intent(this@profile_activity, security_activity::class.java)
-            startActivity(intent)
-        }
     }
 }

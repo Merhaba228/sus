@@ -28,6 +28,8 @@
         android:theme="@style/Theme.Sus"
         tools:targetApi="31">
         <activity
+            android:name="com.example.sus.bottom_menu" />
+        <activity
             android:name=".polls_activity"
             android:exported="false" />
         <activity

@@ -11,6 +11,9 @@
     <string name="events">Мероприятия</string>
     <string name="performance">Успеваемость</string>
     <string name="polls">Опросы</string>
+    <string name="menu_home">Главная</string>
+    <string name="menu_profile">Профиль</string>
+    <string name="menu_settings">Мероприятия</string>
     <string name="exit">Выход</string>
     <string name="help">Помощь</string>
     <string name="enter">Войти</string>

@@ -73,27 +73,9 @@ class login_activity : AppCompatActivity() {
 
     private fun handleTokenResponse(userToken: Token, sharedPrefManager: SharedPrefManager, userApi: MrsuApi) {
         if (userToken.accessToken != null) {
-            sharedPrefManager.saveToken(userToken)
-
-            CoroutineScope(Dispatchers.IO).launch {
                 try {
-
-                    val user = userApi.getUser("Bearer ${userToken.accessToken}")
-                    sharedPrefManager.saveUserData(user)
-
-                    val student = userApi.getStudent("Bearer ${userToken.accessToken}")
-                    sharedPrefManager.saveStudentData(student)
-
-                    val securityEvents = userApi.getSecurityEvents("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
-                    sharedPrefManager.saveSecurityEvents(securityEvents)
-
-                    val studentTimeTable = userApi.getStudentTimeTable("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
-                    sharedPrefManager.saveStudentTimeTable(studentTimeTable)
-
-                    runOnUiThread {
-                        performActionsAfterAuthentication()
-                    }
-
+                    sharedPrefManager.saveToken(userToken)
+                    performActionsAfterAuthentication()
                 } catch (e: Exception) {
                     runOnUiThread {
                         showErrorToast("${Date()}, Ошибка при получении пользовательских данных в handleTokenResponse ")
@@ -101,7 +83,7 @@ class login_activity : AppCompatActivity() {
                         Log.e("error_local", e.localizedMessage)
                     }
                 }
-            }
+
         } else {
             runOnUiThread {
                 showErrorToast("Ошибка при авторизации")
@@ -110,7 +92,7 @@ class login_activity : AppCompatActivity() {
     }
 
     private fun performActionsAfterAuthentication() {
-        val intent = Intent(this@login_activity, general_activity::class.java)
+        val intent = Intent(this@login_activity, bottom_menu::class.java)
         startActivity(intent)
     }
 
