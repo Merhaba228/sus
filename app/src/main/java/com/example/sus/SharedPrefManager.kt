@@ -26,6 +26,7 @@ object SharedPrefManager {
     private const val USER_DATA = "user_data"
     private const val SECURITY_EVENTS = "security_events"
     private const val STUDENT_TIME_TABLE = "student_time_table"
+    private const val STUDENT_SEMESTER = "student_semester"
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var instance: SharedPrefManager
@@ -70,6 +71,9 @@ object SharedPrefManager {
 
                 val studentTimeTable = userApi.getStudentTimeTable("Bearer ${currentAccessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
                 saveStudentTimeTable(studentTimeTable)
+
+                val studentSemester = userApi.getStudentSemester("Bearer ${currentAccessToken}")
+                saveStudentSemester(studentSemester)
 
             } catch (e: Exception) {
 
@@ -134,6 +138,20 @@ object SharedPrefManager {
             apply()
         }
     }
+
+    fun getStudentSemester(): StudentSemester? {
+        val jsonStudentSemester = sharedPreferences.getString(STUDENT_SEMESTER, null)
+        return Gson().fromJson(jsonStudentSemester, StudentSemester::class.java)
+    }
+
+    fun saveStudentSemester(studentSemester: StudentSemester) {
+        val jsonStudentSemester = Gson().toJson(studentSemester)
+        sharedPreferences.edit().apply {
+            putString(STUDENT_SEMESTER, jsonStudentSemester)
+            apply()
+        }
+    }
+
 
     fun getStudentTimeTable(): List<StudentTimeTable>? {
         val jsonStudentTimeTable = sharedPreferences.getString(STUDENT_TIME_TABLE, null)

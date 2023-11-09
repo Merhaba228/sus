@@ -46,7 +46,8 @@ class general1 : Fragment() {
         val button2 = view.findViewById<View>(R.id.profile_button)
         button2.setOnClickListener()
         {
-            val intent = Intent(requireContext(), profile_activity::class.java)
+            val intent = Intent(requireContext(), bottom_menu::class.java)
+            intent.putExtra("activityName", "profile_activity")
             startActivity(intent)
         }
 

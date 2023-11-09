@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <supports-screens
         android:anyDensity="true"
@@ -16,7 +16,6 @@
         android:smallScreens="false"
         android:xlargeScreens="true" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -28,7 +27,9 @@
         android:theme="@style/Theme.Sus"
         tools:targetApi="31">
         <activity
-            android:name="com.example.sus.bottom_menu" />
+            android:name=".disciplines_activity"
+            android:exported="false" />
+        <activity android:name=".bottom_menu" />
         <activity
             android:name=".polls_activity"
             android:exported="false" />

@@ -84,9 +84,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_marginTop="25dp"
-                android:selectedWeekBackgroundColor="#FF3700B3"
-                android:weekNumberColor="#FF3700B3"
-                android:weekSeparatorLineColor="#FF3700B3"
+                android:dateTextAppearance="@style/CalendarTextStyle"
+                android:dayOfWeekTextAppearance="@style/CalendarTextStyle"
+                android:selectedWeekBackgroundColor="@color/black"
+                android:weekNumberColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textView_timeTable" />

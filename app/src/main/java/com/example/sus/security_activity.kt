@@ -46,7 +46,7 @@ class security_activity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        dateTV.text = SimpleDateFormat("yyyy-MM-dd", Locale("ru")).format(Date())
+        dateTV.text = SimpleDateFormat("dd MMMM yyyy", Locale("ru")).format(Date())
         calendarView.setDate(currentDate.timeInMillis)
 
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
@@ -54,7 +54,7 @@ class security_activity : AppCompatActivity() {
             calendar.set(year, month, dayOfMonth)
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
             val formattedDate = dateFormat.format(calendar.time)
-            dateTV.text = formattedDate
+            dateTV.text = SimpleDateFormat("dd MMMM yyyy", Locale("ru")).format(calendar.time)
 
             val loadingIndicator = findViewById<ProgressBar>(R.id.loadingIndicator)
             loadingIndicator.visibility = View.VISIBLE
@@ -74,7 +74,8 @@ class security_activity : AppCompatActivity() {
 
         val arrow_button = findViewById<View>(R.id.arrow_back)
         arrow_button.setOnClickListener {
-            val intent = Intent(this@security_activity, profile_activity::class.java)
+            val intent = Intent(this@security_activity, bottom_menu::class.java)
+            intent.putExtra("activityName", "profile_activity")
             startActivity(intent)
         }
     }
@@ -88,7 +89,7 @@ class SecurityEventAdapter(private var securityEvents: List<SecurityEvent>?) : R
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SecurityEventViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.security_event_item, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_security_event, parent, false)
         return SecurityEventViewHolder(itemView)
     }
 

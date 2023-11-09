@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">sus</string>
+    <string name="app_name">MRSU</string>
     <string name="mrsu">MRSU</string>
     <string name="username_email">Username / Email</string>
     <string name="forget_password">Forget password?</string>
@@ -66,5 +66,6 @@
     <string name="programm">Рабочая программа</string>
     <string name="documents">Документы</string>
     <string name="perform">Успеваемость</string>
+    <string name="disciplines">Дисциплины</string>
     <string name="title_activity_main4">MainActivity4</string>
 </resources>

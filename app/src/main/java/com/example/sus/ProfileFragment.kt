@@ -76,6 +76,13 @@ class profile1 : Fragment() {
             val intent = Intent(requireContext(), security_activity::class.java)
             startActivity(intent)
         }
+
+        val button4 = view.findViewById<View>(R.id.performance_button)
+        button4.setOnClickListener {
+            val intent = Intent(requireContext(), disciplines_activity::class.java)
+            startActivity(intent)
+        }
+
         return view
     }
 

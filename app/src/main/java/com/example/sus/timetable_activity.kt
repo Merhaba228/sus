@@ -101,7 +101,8 @@ class TimeTableActivity : AppCompatActivity()
 
         val button3 = findViewById<View>(R.id.arrow_back)
         button3.setOnClickListener {
-            val intent = Intent(this@TimeTableActivity, general_activity::class.java)
+            val intent = Intent(this@TimeTableActivity, bottom_menu::class.java)
+            intent.putExtra("activityName", "general_activity")
             startActivity(intent)
         }
     }

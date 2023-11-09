@@ -12,12 +12,23 @@ class bottom_menu : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("bottom_menu", "check_1")
-
         binding = ActivityBottomMenuBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_main2)
-        setContentView(binding.root)
         replaceFragment(general1())
+
+        val intent = intent
+        val activityName = intent.getStringExtra("activityName")
+        Log.d("check_bottom_menu", activityName.toString())
+        if (activityName == "general_activity" ){
+            setContentView(R.layout.activity_main2)
+            replaceFragment(general1())}
+
+        if (activityName == "profile_activity") {
+            setContentView(R.layout.activity_main3)
+            replaceFragment(profile1())}
+
+        setContentView(binding.root)
+
         SharedPrefManager.refreshDataUsingRefreshToken()
         binding.bottomNavigationView.setOnItemSelectedListener {
 
