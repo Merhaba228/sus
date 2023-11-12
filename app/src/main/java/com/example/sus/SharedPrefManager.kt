@@ -4,6 +4,7 @@ import com.example.loginapp.activity.logic.auth.retrofit.api.*
 import com.example.loginapp.activity.logic.auth.retrofit.dto.*
 import com.example.sus.activity.logic.auth.retrofit.dto.*
 import com.google.gson.Gson
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,8 +26,10 @@ object SharedPrefManager {
     private const val STUDENT_DATA = "student_data"
     private const val USER_DATA = "user_data"
     private const val SECURITY_EVENTS = "security_events"
+    private const val CURRENT_DISCIPLINE = "current_discipline"
     private const val STUDENT_TIME_TABLE = "student_time_table"
     private const val STUDENT_SEMESTER = "student_semester"
+    private const val STUDENT_RATING_PLAN = "student_rating_plan"
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var instance: SharedPrefManager
@@ -89,6 +92,19 @@ object SharedPrefManager {
             putLong(EXPIRATION_TIME, userToken.expiresIn * 1000 + System.currentTimeMillis() + 150)
             apply()
         }
+    }
+
+    fun saveStudentRatingPlan(studentRatingPlan: StudentRatingPlan) {
+        val jsonStudentRatingPlan = Gson().toJson(studentRatingPlan)
+        sharedPreferences.edit().apply {
+            putString(STUDENT_RATING_PLAN, jsonStudentRatingPlan)
+            apply()
+        }
+    }
+
+    fun getStudentRatingPlan(): StudentRatingPlan {
+        val jsonStudentSemester = sharedPreferences.getString(STUDENT_RATING_PLAN, null)
+        return Gson().fromJson(jsonStudentSemester, StudentRatingPlan::class.java)
     }
 
     fun saveUserData(userData: User) {
@@ -159,6 +175,19 @@ object SharedPrefManager {
         return Gson().fromJson(jsonStudentTimeTable, type)
     }
 
+    fun saveDiscipline(discipline: Discipline) {
+        val jsonDiscipline = Gson().toJson(discipline)
+        sharedPreferences.edit().apply {
+            putString(CURRENT_DISCIPLINE, jsonDiscipline)
+            apply()
+        }
+    }
+
+    fun getDiscipline(): Discipline? {
+        val jsonDiscipline = sharedPreferences.getString(CURRENT_DISCIPLINE, null)
+        return Gson().fromJson(jsonDiscipline, Discipline::class.java)
+    }
+
     fun refreshCalendarDateUsingRefreshToken(date: String, callback: (List<SecurityEvent>) -> Unit) {
 
         val BASE_URL_USER = "https://papi.mrsu.ru"
@@ -173,6 +202,23 @@ object SharedPrefManager {
                 saveSecurityEvents(refreshedSecurityEvents)
 
                 callback(refreshedSecurityEvents)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun refreshCurrentDisciplineUsingRefreshToken(disciplineId: String, callback: (Discipline) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                val refreshedCurrentDiscipline = userApi.getDisciplineById("Bearer ${getAccessToken()}", disciplineId.toInt())
+                saveDiscipline(refreshedCurrentDiscipline)
+
+                callback(refreshedCurrentDiscipline)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -195,6 +241,24 @@ object SharedPrefManager {
             }
         }
     }
+
+    fun refreshStudentRatingPlanUsingRefreshToken(disciplineId: String, callback: (StudentRatingPlan) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                val refreshedStudentRatingPlan = userApi.getStudentRatingPlan("Bearer ${getAccessToken()}", disciplineId.toInt())
+                saveStudentRatingPlan(refreshedStudentRatingPlan)
+
+                callback(refreshedStudentRatingPlan)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 
     fun getRefreshToken(): String? {
         return sharedPreferences.getString(REFRESH_TOKEN, null)

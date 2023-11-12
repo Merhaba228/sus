@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
-
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -79,7 +78,7 @@ class profile1 : Fragment() {
 
         val button4 = view.findViewById<View>(R.id.performance_button)
         button4.setOnClickListener {
-            val intent = Intent(requireContext(), disciplines_activity::class.java)
+            val intent = Intent(requireContext(), DisciplinesActivity::class.java)
             startActivity(intent)
         }
 

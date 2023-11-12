@@ -162,13 +162,17 @@ class TimeTableActivity : AppCompatActivity()
                 }
 
                 lessonAdapter.submitList(lessonDisciplines.toList())
+
             }
+
+
         }
 
     }
 
     inner class LessonAdapter : RecyclerView.Adapter<LessonAdapter.LessonViewHolder>() {
         private var lessonList: List<Pair<TimeTableLessonDiscipline?, Int>> = listOf()
+        var lastLessonNumber: Int = 0
 
         fun submitList(lessonList: List<Pair<TimeTableLessonDiscipline?, Int>>) {
             this.lessonList = lessonList
@@ -199,7 +203,10 @@ class TimeTableActivity : AppCompatActivity()
                 val lesson = lessonPair.first
                 val lessonNumber = lessonPair.second
 
-                locationTextView.text = " ${lessonNumber}. ${Schedule.getByNumber(lessonNumber)?.time}"
+                if(lastLessonNumber != lessonNumber)
+                    locationTextView.text = " ${lessonNumber}(1). ${Schedule.getByNumber(lessonNumber)?.time}"
+                else locationTextView.text = " ${lessonNumber}(2). ${Schedule.getByNumber(lessonNumber)?.time}"
+
                 val spannableBuilder = SpannableStringBuilder()
                 if (lesson?.title?.isNotBlank() == true) {
                     val formattedTitle = SpannableString(lesson.title)
@@ -207,6 +214,7 @@ class TimeTableActivity : AppCompatActivity()
                     spannableBuilder.append(formattedTitle)
                     spannableBuilder.append("\n")
                     spannableBuilder.append("[к.${lesson?.auditorium?.campusId?.toString()?.get(0)} ${lesson?.auditorium?.number}] (${lesson?.teacher?.userName})")
+
                     lessonNameTextView.text = spannableBuilder
 
                     val teacherPhoto: ImageView = itemView.findViewById(R.id.teacher_image)
@@ -218,7 +226,7 @@ class TimeTableActivity : AppCompatActivity()
                         .into(teacherPhoto)
                 }
                     else lessonNameTextView.text = "(Пара отсутствует)"
-
+                lastLessonNumber = lessonNumber
             }
         }
     }

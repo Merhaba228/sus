@@ -16,7 +16,7 @@ data class DocFiles(
     @SerializedName("Size")
     val size: Int,
     @SerializedName("Date")
-    val date: Date,
+    val date: String,
     @SerializedName("URL")
     val url: String
 )
