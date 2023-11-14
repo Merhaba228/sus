@@ -17,6 +17,8 @@ import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlinx.coroutines.withContext
+
 
 object SharedPrefManager {
     private const val PREF_NAME = "MyPrefs"
@@ -188,16 +190,30 @@ object SharedPrefManager {
         return Gson().fromJson(jsonDiscipline, Discipline::class.java)
     }
 
-    fun refreshCalendarDateUsingRefreshToken(date: String, callback: (List<SecurityEvent>) -> Unit) {
-
+    fun refreshStudentSemesterByDateUsingRefreshToken(year: String, period: Int) {
         val BASE_URL_USER = "https://papi.mrsu.ru"
-
         val userApi = createRetrofitApi(BASE_URL_USER)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-
                 checkTokenExpiration()
+
+                val refreshedStudentSemester = userApi.getStudentSemester("Bearer ${getAccessToken()}", year, period)
+                saveStudentSemester(refreshedStudentSemester)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun refreshCalendarDateUsingRefreshToken(date: String, callback: (List<SecurityEvent>) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+
                 val refreshedSecurityEvents = userApi.getSecurityEvents("Bearer ${getAccessToken()}", date)
                 saveSecurityEvents(refreshedSecurityEvents)
 
@@ -215,6 +231,7 @@ object SharedPrefManager {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 checkTokenExpiration()
+
                 val refreshedCurrentDiscipline = userApi.getDisciplineById("Bearer ${getAccessToken()}", disciplineId.toInt())
                 saveDiscipline(refreshedCurrentDiscipline)
 

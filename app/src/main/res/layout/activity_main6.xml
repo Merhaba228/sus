@@ -59,11 +59,11 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/security_recyclerView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="360dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/idTVDate"></androidx.recyclerview.widget.RecyclerView>

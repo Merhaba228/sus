@@ -17,6 +17,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import android.util.Log
+import android.widget.Spinner
+import android.widget.ArrayAdapter
+import android.widget.AdapterView
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 interface OnItemClickListener {
     fun onItemClick(disciplineId: String)
 }
@@ -25,6 +35,8 @@ class DisciplinesActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recordBooksAdapter: RecordBooksAdapter
     private lateinit var progressBar: ProgressBar
+    private lateinit var yearSpinner: Spinner
+    private lateinit var semesterSpinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,38 +44,80 @@ class DisciplinesActivity : AppCompatActivity() {
 
         SharedPrefManager.getInstance(this)
 
-        recyclerView = findViewById<RecyclerView>(R.id.disciplines_recyclerView)
+        recyclerView = findViewById(R.id.disciplines_recyclerView)
         progressBar = findViewById(R.id.loadingIndicator)
+        yearSpinner = findViewById(R.id.yearSpinner)
+        semesterSpinner = findViewById(R.id.semesterSpinner)
 
-        val studentSemester = SharedPrefManager.getStudentSemester()
-        recyclerView = findViewById<RecyclerView>(R.id.disciplines_recyclerView)
+        val years = arrayOf("2023 - 2024", "2022 - 2023", "2021 - 2022")
+        val yearAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, years)
+        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        yearSpinner.adapter = yearAdapter
+
+        val semesters = arrayOf("1", "2")
+        val semesterAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, semesters)
+        semesterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        semesterSpinner.adapter = semesterAdapter
+
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recordBooksAdapter = RecordBooksAdapter(studentSemester?.recordBooks, object : OnItemClickListener {
-            override fun onItemClick(disciplineId: String) {
-
-                progressBar.visibility = View.VISIBLE
-
-                CoroutineScope(Dispatchers.Main).launch {
-                    suspendCoroutine { continuation ->
-                        SharedPrefManager.refreshCurrentDisciplineUsingRefreshToken(disciplineId) { result ->
-                            continuation.resume(result)
-                        }
-                    }
-
-                    suspendCoroutine { continuation ->
-                        SharedPrefManager.refreshStudentRatingPlanUsingRefreshToken(disciplineId) { result ->
-                            continuation.resume(result)
-                        }
-                    }
-
-                    progressBar.visibility = View.GONE
-                    val intent = Intent(this@DisciplinesActivity, PerformanceActivity::class.java)
-                    startActivity(intent)
-                }
-
+        updateRecyclerView()
+        yearSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
+                updateRecyclerView()
             }
-        })
-        recyclerView.adapter = recordBooksAdapter
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+            }
+        }
+
+        semesterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
+                updateRecyclerView()
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+            }
+        }
+
+    }
+
+    internal fun updateRecyclerView() {
+        val selectedYear = yearSpinner.selectedItem.toString()
+        val selectedSemester = semesterSpinner.selectedItem.toString()
+        runBlocking {
+            launch {
+                SharedPrefManager.refreshStudentSemesterByDateUsingRefreshToken(selectedYear, selectedSemester.toInt())
+            }
+
+            delay(400)
+        }
+
+        recordBooksAdapter = RecordBooksAdapter(SharedPrefManager.getStudentSemester()?.recordBooks, object : OnItemClickListener {
+                override fun onItemClick(disciplineId: String) {
+                    progressBar.visibility = View.VISIBLE
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        suspendCoroutine { continuation ->
+                            SharedPrefManager.refreshStudentRatingPlanUsingRefreshToken(disciplineId) { result ->
+                                continuation.resume(result)
+                            }
+                        }
+
+                        suspendCoroutine { continuation ->
+                            SharedPrefManager.refreshCurrentDisciplineUsingRefreshToken(disciplineId) { result ->
+                                continuation.resume(result)
+                            }
+                        }
+
+                        progressBar.visibility = View.GONE
+                        val intent = Intent(this@DisciplinesActivity, PerformanceActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+            })
+            recyclerView.adapter = recordBooksAdapter
+
+
     }
 }
 

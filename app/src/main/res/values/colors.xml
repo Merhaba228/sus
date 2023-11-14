@@ -9,4 +9,32 @@
     <color name="lavender">#E6E6FA</color>
     <color name="silver">#C0C0C0</color>
     <color name="amethyst">#9966CC</color>
+
+    <!-- Синие тона -->
+    <color name="custom_light_primary">#2196F3</color>
+    <color name="custom_light_primary_variant">#1976D2</color>
+    <color name="custom_light_on_primary">#FFFFFF</color>
+    <color name="custom_light_secondary">#64B5F6</color>
+    <color name="custom_light_secondary_variant">#42A5F5</color>
+    <color name="custom_light_on_secondary">#000000</color>
+    <color name="custom_light_window_background">#E3F2FD</color>
+    <color name="custom_light_status_bar">#1976D2</color>
+    <color name="custom_light_navigation_bar">#1976D2</color>
+    <color name="custom_light_background">#FFFFFF</color>
+    <color name="custom_light_text_primary">#000000</color>
+    <color name="custom_light_text_secondary">#757575</color>
+
+    <!-- Фиолетовые тона -->
+    <color name="custom_primary">#673AB7</color>
+    <color name="custom_primary_variant">#512DA8</color>
+    <color name="custom_on_primary">#FFFFFF</color>
+    <color name="custom_secondary">#9575CD</color>
+    <color name="custom_secondary_variant">#7E57C2</color>
+    <color name="custom_on_secondary">#000000</color>
+    <color name="custom_window_background">#E1BEE7</color>
+    <color name="custom_status_bar">#512DA8</color>
+    <color name="custom_navigation_bar">#512DA8</color>
+    <color name="custom_background">#FFFFFF</color>
+    <color name="custom_text_primary">#000000</color>
+    <color name="custom_text_secondary">#757575</color>
 </resources>

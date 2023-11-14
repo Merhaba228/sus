@@ -1,5 +1,6 @@
 package com.example.sus
 
+import SharedPrefManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,17 +14,13 @@ import android.view.ViewGroup
 import android.view.View
 import android.view.LayoutInflater
 import java.util.Locale
-
-
-private lateinit var titleTextView: TextView
-private lateinit var recyclerView: RecyclerView
-private lateinit var ratingPlanAdapter: ControlDotsAdapter
-private lateinit var loadingIndicator: ProgressBar
+import kotlin.math.round
 
 class PerformanceActivity : AppCompatActivity() {
     private lateinit var titleTextView: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var controlDotsAdapter: ControlDotsAdapter
+    private lateinit var totalBallsTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,10 +28,31 @@ class PerformanceActivity : AppCompatActivity() {
         SharedPrefManager.getInstance(this)
 
         titleTextView = findViewById(R.id.textView_performance_discipline)
+        totalBallsTextView = findViewById(R.id.textViewTotalBalls)
         recyclerView = findViewById(R.id.performance_discipline_recyclerView)
         titleTextView.text = SharedPrefManager.getDiscipline()?.title
+        val zeroSessionTextView: TextView = findViewById(R.id.textViewZeroSession)
+        if (SharedPrefManager.getStudentRatingPlan().markZeroSession != null) {
+            zeroSessionTextView.text = "Нулевая сессия: ${SharedPrefManager.getStudentRatingPlan().markZeroSession.ball} / 5.0"
+        } else {
+            zeroSessionTextView.text = "Нулевая сессия: (балл не указан)"
+        }
 
         val sections: List<Sections> = SharedPrefManager.getStudentRatingPlan().sections
+
+        var totalMarks = 0.0
+        var maxMarks = 0.0
+        for (section in sections) {
+            for (controlDot in section.controlDots) {
+                controlDot.maxBall?.let{
+                    maxMarks += it
+                }
+                controlDot.mark?.ball?.let {
+                    totalMarks += it
+                }
+            }
+        }
+        totalBallsTextView.text = "Итого: ${round(totalMarks)} / ${maxMarks} "
 
         controlDotsAdapter = ControlDotsAdapter(sections)
         recyclerView.adapter = controlDotsAdapter
@@ -58,6 +76,12 @@ class ControlDotsAdapter(private val sectionsList: List<Sections>) :
 
     override fun onBindViewHolder(holder: ControlDotViewHolder, position: Int) {
         val currentSections = sectionsList[position]
+
+        if (currentSections.title != null) {
+            holder.sectionTitleTextView.text = currentSections.title
+        } else {
+            holder.sectionTitleTextView.text = "(Название контрольной точки не указано)"
+        }
 
         holder.sectionTitleTextView.text = currentSections.title
 

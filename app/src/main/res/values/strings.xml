@@ -14,6 +14,8 @@
     <string name="menu_home">Главная</string>
     <string name="menu_profile">Профиль</string>
     <string name="menu_settings">Мероприятия</string>
+    <string name="menu_performance">Успеваемость</string>
+    <string name="menu_etc">Меню</string>
     <string name="exit">Выход</string>
     <string name="help">Помощь</string>
     <string name="enter">Войти</string>

@@ -32,15 +32,22 @@ interface MrsuApi {
     suspend fun getStudentSemester(
         @Header ("Authorization") authorization: String): StudentSemester
 
+    @GET("v1/StudentSemester")
+    suspend fun getStudentSemester(
+        @Header("Authorization") authorization: String,
+        @Query("year") year: String,
+        @Query("period") period: Int): StudentSemester
+
     @GET("v1/StudentRatingPlan")
     suspend fun getStudentRatingPlan(
         @Header ("Authorization") authorization: String,
         @Query ("id") id: Int): StudentRatingPlan
 
-    @GET("v1/Discipline/{id}")
+    @GET("v1/Discipline")
     suspend fun getDisciplineById(
         @Header("Authorization") authorization: String,
         @Query("id") id: Int): Discipline
+
 
     @FormUrlEncoded
     @POST("OAuth/token")

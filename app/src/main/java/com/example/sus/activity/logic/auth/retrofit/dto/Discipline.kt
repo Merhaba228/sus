@@ -14,7 +14,7 @@ data class Discipline(
     @SerializedName("Groups")
     val groups: List<String>,
     @SerializedName("DocFiles")
-    val docFiles: List<List<DocFiles>>,
+    val docFiles: List <DocFiles>,
     @SerializedName("WorkingProgramm")
     val workingProgramm: DocFiles,
     @SerializedName("Id")

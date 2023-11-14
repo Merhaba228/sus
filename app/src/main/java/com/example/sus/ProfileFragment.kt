@@ -57,18 +57,6 @@ class profile1 : Fragment() {
         rotateAnimation.repeatCount = Animation.INFINITE
         profilePictureImageView.startAnimation(rotateAnimation);
 
-        val button = view.findViewById<View>(R.id.back_button)
-        button.setOnClickListener {
-            val intent = Intent(requireContext(), general_activity::class.java)
-            startActivity(intent)
-        }
-
-        val button2 = view.findViewById<View>(R.id.exitButton2)
-        button2.setOnClickListener {
-            SharedPrefManager.clearData()
-            val intent = Intent(requireContext(), login_activity::class.java)
-            startActivity(intent)
-        }
 
         val button3 = view.findViewById<View>(R.id.turnstiles_button)
         button3.setOnClickListener {

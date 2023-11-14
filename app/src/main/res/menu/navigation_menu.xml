@@ -8,8 +8,21 @@
         android:id="@+id/profileFragment"
         android:icon="@drawable/baseline_person_24"
         android:title="@string/menu_profile" />
+
+    <item
+        android:id="@+id/performanceFragment"
+        android:icon="@drawable/performance_book"
+        android:title="@string/menu_performance" />
+
     <item
         android:id="@+id/settingsFragment"
-        android:icon="@drawable/logout"
+        android:icon="@drawable/events"
         android:title="@string/menu_settings" />
+
+    <item
+        android:id="@+id/etcFragment"
+        android:icon="@drawable/etc"
+        android:title="@string/menu_etc" />
+
+
 </menu>

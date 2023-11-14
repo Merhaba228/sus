@@ -8,11 +8,12 @@
 
     <TextView
         android:id="@+id/timeTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
         android:padding="15dp"
         android:text="time"
+        android:layout_marginStart="5dp"
         android:textColor="#000000"
         android:fontFamily="@font/alatsi"
         android:textSize="16sp"
@@ -22,7 +23,7 @@
 
     <TextView
         android:id="@+id/buildTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textColor="#000000"
@@ -37,7 +38,7 @@
 
     <TextView
         android:id="@+id/statusTextView"
-        android:layout_width="80dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
         android:padding="15dp"
@@ -45,6 +46,7 @@
         android:textColor="#000000"
         android:textSize="16sp"
         android:fontFamily="@font/alatsi"
+        android:layout_marginEnd="5dp"
         app:layout_constraintStart_toEndOf="@id/buildTextView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

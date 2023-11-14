@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:text="Control Dot Title"
-            android:padding="7dp"
+            android:padding="10dp"
+            android:gravity="start"
             android:background="@drawable/rounded_border"
             android:textStyle="bold"/>
 
