@@ -32,6 +32,7 @@ object SharedPrefManager {
     private const val STUDENT_TIME_TABLE = "student_time_table"
     private const val STUDENT_SEMESTER = "student_semester"
     private const val STUDENT_RATING_PLAN = "student_rating_plan"
+    private const val EVENTS = "events"
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var instance: SharedPrefManager
@@ -79,6 +80,7 @@ object SharedPrefManager {
 
                 val studentSemester = userApi.getStudentSemester("Bearer ${currentAccessToken}")
                 saveStudentSemester(studentSemester)
+
 
             } catch (e: Exception) {
 
@@ -157,6 +159,21 @@ object SharedPrefManager {
         }
     }
 
+    fun getEvents(): List<EventInfo>? {
+        val jsonEvents = sharedPreferences.getString(EVENTS, null)
+        val type: Type = object : TypeToken<List<EventInfo>>() {}.type
+        return Gson().fromJson(jsonEvents, type)
+    }
+
+    fun saveEvents(eventInfoList: List<EventInfo>) {
+        val jsonEvents = Gson().toJson(eventInfoList)
+        sharedPreferences.edit().apply {
+            putString(EVENTS, jsonEvents)
+            apply()
+        }
+    }
+
+
     fun getStudentSemester(): StudentSemester? {
         val jsonStudentSemester = sharedPreferences.getString(STUDENT_SEMESTER, null)
         return Gson().fromJson(jsonStudentSemester, StudentSemester::class.java)
@@ -223,6 +240,27 @@ object SharedPrefManager {
             }
         }
     }
+
+    fun refreshEventsByDateUsingRefreshToken(date: String, callback: (List<EventInfo>) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                Log.d("Check_events_1", "123")
+                val refreshedEvents = userApi.getEventsByDate("Bearer ${getAccessToken()}", date)
+                Log.d("Check_events_2", "123")
+                saveEvents(refreshedEvents)
+                Log.d("Check_events_3", "123")
+
+                callback(refreshedEvents)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 
     fun refreshCurrentDisciplineUsingRefreshToken(disciplineId: String, callback: (Discipline) -> Unit) {
         val BASE_URL_USER = "https://papi.mrsu.ru"

@@ -37,11 +37,12 @@ class DisciplinesActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var yearSpinner: Spinner
     private lateinit var semesterSpinner: Spinner
+    private var isNotFirstEntering: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_disciplines)
-
+        isNotFirstEntering = true
         SharedPrefManager.getInstance(this)
 
         recyclerView = findViewById(R.id.disciplines_recyclerView)
@@ -60,6 +61,7 @@ class DisciplinesActivity : AppCompatActivity() {
         semesterSpinner.adapter = semesterAdapter
 
         recyclerView.layoutManager = LinearLayoutManager(this)
+
         updateRecyclerView()
         yearSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
@@ -84,13 +86,21 @@ class DisciplinesActivity : AppCompatActivity() {
     internal fun updateRecyclerView() {
         val selectedYear = yearSpinner.selectedItem.toString()
         val selectedSemester = semesterSpinner.selectedItem.toString()
-        runBlocking {
-            launch {
-                SharedPrefManager.refreshStudentSemesterByDateUsingRefreshToken(selectedYear, selectedSemester.toInt())
-            }
 
-            delay(400)
+        if(!isNotFirstEntering) {
+            runBlocking {
+                launch {
+                    SharedPrefManager.refreshStudentSemesterByDateUsingRefreshToken(
+                        selectedYear,
+                        selectedSemester.toInt()
+                    )
+                }
+
+                delay(400)
+            }
         }
+
+        isNotFirstEntering = false
 
         recordBooksAdapter = RecordBooksAdapter(SharedPrefManager.getStudentSemester()?.recordBooks, object : OnItemClickListener {
                 override fun onItemClick(disciplineId: String) {

@@ -1,10 +1,11 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/scrollView"
     android:layout_height="match_parent"
-    tools:context=".timetable_activity"
+    tools:context=".actualEvents_activity"
     android:background="@drawable/background_test4">
 
     <LinearLayout
@@ -46,89 +47,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
-            <TableLayout
-                android:id="@+id/security_tableLayout"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/actualEvents_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="390dp"
-                app:layout_constraintTop_toBottomOf="@id/idTVDate"
-                android:gravity="center_horizontal"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="25dp">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/idTVDate"></androidx.recyclerview.widget.RecyclerView>
 
-                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:padding="5dp"
-                        android:text="Выставка Юлии Бакаевой\ «Наедине с природой»\n"
-                        android:paddingStart="10dp"
-                        android:textSize="14sp" />
-
-                </TableRow>
-
-                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:padding="5dp"
-                        android:text=""
-                        android:textSize="14sp" />
-                </TableRow>
-
-                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:padding="5dp"
-                        android:text=""
-                        android:textSize="14sp" />
-
-                </TableRow>
-
-                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:padding="5dp"
-                        android:text=""
-                        android:textSize="14sp" />
-
-                </TableRow>
-
-                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:padding="5dp"
-                        android:text=""
-                        android:textSize="14sp" />
-
-                </TableRow>
-
-                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:padding="5dp"
-                        android:text=""
-                        android:textSize="14sp" />
-
-                </TableRow>
-
-                <TableRow android:background="@drawable/table_border" android:layout_margin="7dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:padding="5dp"
-                        android:text=""
-                        android:textSize="14sp" />
-
-                </TableRow>
-
-
-            </TableLayout>
+            <ProgressBar
+                android:id="@+id/loadingIndicator"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:indeterminateDrawable="@drawable/progress_bar_custom_2"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/idTVDate"
@@ -141,10 +81,10 @@
                 android:textStyle="bold"
                 android:layout_marginTop="30dp"
                 android:layout_marginStart="50dp"
-                app:layout_constraintTop_toBottomOf="@id/calendarView"  />
+                app:layout_constraintTop_toBottomOf="@id/eventsCalendarView"  />
 
             <CalendarView
-                android:id="@+id/calendarView"
+                android:id="@+id/eventsCalendarView"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_marginTop="25dp"
@@ -157,15 +97,8 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
-            android:id="@+id/back_button"
-            android:layout_width="171dp"
-            android:layout_height="48dp"
-            android:layout_gravity="end"
-            android:layout_margin="26dp"
-            android:text="Мои мероприятия"
-            android:textSize="14sp" />
 
     </LinearLayout>
+
 
 </ScrollView>

@@ -22,6 +22,23 @@ interface MrsuApi {
         @Query("date") date: String
     ): List<SecurityEvent>
 
+    @GET("v1/Events")
+    suspend fun getEventsByDate(
+        @Header("Authorization") authorization: String,
+        @Query("date") date: String
+    ): List<EventInfo>
+
+    @GET("v1/Events")
+    suspend fun getEvents(
+        @Header("Authorization") authorization: String,
+    ): List<EventInfo>
+
+    @GET("v1/Events")
+    suspend fun getEventsByMode(
+        @Header("Authorization") authorization: String,
+        @Query("mode") mode: String
+    ): List<EventInfo>
+
     @GET("v1/StudentTimeTable")
     suspend fun getStudentTimeTable(
         @Header("Authorization") authorization: String,
