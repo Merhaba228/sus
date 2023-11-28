@@ -36,5 +36,32 @@
             android:textSize="15sp"
             android:padding="7dp"
             android:text="Control Dot Mark"/>
+
+        <TextView
+            android:id="@+id/textViewControlDotReportDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:padding="7dp"
+            android:text="Control Dot Report Date"/>
+
+        <TextView
+            android:id="@+id/textViewControlDotReportTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:padding="7dp"
+            android:text="Control Dot Report Title"/>
+
+        <TextView
+            android:id="@+id/textViewControlDotReportFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:padding="7dp"
+            android:text="Скачать отчет"
+            android:textColor="@color/bluelet1"
+            android:clickable="true"/>
+
     </LinearLayout>
 </LinearLayout>

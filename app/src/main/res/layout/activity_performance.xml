@@ -16,18 +16,40 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+                android:background="@color/violet1"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/arrow_back"
+                android:layout_width="wrap_content"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_back"
+                android:background="@color/violet1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/textView_performance_discipline"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_gravity="start|top"
-                android:background="@color/violet1"
-                android:fontFamily="@font/alatsi"
+                android:layout_height="wrap_content"
                 android:gravity="center"
+                android:padding="5dp"
                 android:text="Название дисциплины"
-                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:background="@color/violet1"
+                android:textColor="@color/white"
+                android:fontFamily="@font/alatsi"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/arrow_back" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/performance_discipline_recyclerView"

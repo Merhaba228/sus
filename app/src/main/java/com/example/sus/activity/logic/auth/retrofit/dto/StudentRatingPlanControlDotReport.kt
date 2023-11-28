@@ -6,6 +6,6 @@ data class StudentRatingPlanControlDotReport(
     val id: Int,
     @SerializedName("CreateDate")
     val createDate: String,
-    @SerializedName("DocFiles")
-    val docFiles: List<DocFiles>
+    @SerializedName("DocFile")
+    val docFiles: DocFiles
 )

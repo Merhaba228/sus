@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.loginapp.activity.logic.auth.retrofit.dto.SecurityEvent
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,18 +45,17 @@ class general1 : Fragment() {
             startActivity(intent)
         }
 
-        val button2 = view.findViewById<View>(R.id.profile_button)
+        val button2 = view.findViewById<View>(R.id.allDisciplines_button)
         button2.setOnClickListener()
         {
-            val intent = Intent(requireContext(), bottom_menu::class.java)
-            intent.putExtra("activityName", "profile_activity")
+            val intent = Intent(requireContext(), DisciplinesActivity::class.java)
             startActivity(intent)
         }
 
-        val button3 = view.findViewById<View>(R.id.timetable_button)
+        val button3 = view.findViewById<View>(R.id.safetyButton)
         button3.setOnClickListener()
         {
-            val intent = Intent(requireContext(), TimeTableActivity::class.java)
+            val intent = Intent(requireContext(), SecurityActivity::class.java)
             startActivity(intent)
         }
 

@@ -68,22 +68,6 @@
             android:textSize="16sp"
             android:textAllCaps="false"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/menu_disciplines_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:padding="15dp"
-            android:drawableStart="@drawable/documents"
-            android:drawablePadding="15dp"
-            android:text="@string/disciplines"
-            android:background="@drawable/rounded_border"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="15dp"
-            android:textColor="#000000"
-            android:fontFamily="@font/alatsi"
-            android:textSize="16sp"
-            android:textAllCaps="false"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/menu_tests_button"

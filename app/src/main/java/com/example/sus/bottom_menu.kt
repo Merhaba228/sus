@@ -1,5 +1,6 @@
 package com.example.sus
 
+import DisciplinesFragment
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -18,7 +19,7 @@ class bottom_menu : AppCompatActivity() {
 
         val intent = intent
         val activityName = intent.getStringExtra("activityName")
-        Log.d("check_bottom_menu", activityName.toString())
+
         if (activityName == "general_activity" ){
             setContentView(R.layout.activity_main2)
             replaceFragment(general1())}
@@ -36,6 +37,8 @@ class bottom_menu : AppCompatActivity() {
                 R.id.profileFragment -> replaceFragment(profile1())
                 R.id.homeFragment -> replaceFragment(general1())
                 R.id.etcFragment -> replaceFragment(EtcMenu())
+                R.id.performanceFragment -> replaceFragment(DisciplinesFragment())
+                R.id.settingsFragment -> replaceFragment(TimeTableFragment())
                 else ->{
 
                 }

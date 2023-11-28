@@ -35,6 +35,10 @@ object SharedPrefManager {
     private const val EVENTS = "events"
     private const val EVENT_DATA = "event_data"
     private const val NEWS_LIST = "news_list"
+    private const val GRANTS = "grants"
+    private const val NIOKR = "niokr"
+    private const val DIGITAL_EDUCATIONAL_RESOURCES = "digital_educational_resources"
+    private const val PUBLICATIONS = "publications"
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var instance: SharedPrefManager
@@ -56,14 +60,11 @@ object SharedPrefManager {
     }
 
     fun refreshDataUsingRefreshToken() {
-
         val BASE_URL_USER = "https://papi.mrsu.ru"
-
         val userApi = createRetrofitApi(BASE_URL_USER)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-
                 checkTokenExpiration()
 
                 val currentAccessToken = getAccessToken()
@@ -74,28 +75,48 @@ object SharedPrefManager {
                 val refreshedStudentData = userApi.getStudent("Bearer ${currentAccessToken}")
                 saveStudentData(refreshedStudentData)
 
-                val securityEvents = userApi.getSecurityEvents("Bearer ${currentAccessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
+                val securityEvents = userApi.getSecurityEvents(
+                    "Bearer ${currentAccessToken}",
+                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                )
                 saveSecurityEvents(securityEvents)
 
-                val studentTimeTable = userApi.getStudentTimeTable("Bearer ${currentAccessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
-                val studentPlanNumber = studentTimeTable[1].planNumber
+                val studentTimeTable = userApi.getStudentTimeTable(
+                    "Bearer ${currentAccessToken}",
+                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                )
                 saveStudentTimeTable(studentTimeTable)
 
                 val studentSemester = userApi.getStudentSemester("Bearer ${currentAccessToken}")
                 saveStudentSemester(studentSemester)
 
-                val events = userApi.getEventsByDate("Bearer ${currentAccessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
+                val events = userApi.getEventsByDate(
+                    "Bearer ${currentAccessToken}",
+                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                )
                 saveEvents(events)
 
                 val news = userApi.getNews("Bearer ${currentAccessToken}")
                 saveNewsList(news)
 
-            } catch (e: Exception) {
+                val grants = userApi.getGrants("Bearer ${currentAccessToken}", true)
+                saveGrants(grants)
 
+                val niokr = userApi.getNIOKR("Bearer ${currentAccessToken}")
+                saveNIOKR(niokr)
+
+                val digitalEducationalResources = userApi.getDigitalEducationalResources("Bearer ${currentAccessToken}", true)
+                saveDigitalEducationalResources(digitalEducationalResources)
+
+                val publications = userApi.getPublications("Bearer ${currentAccessToken}", 1)
+                savePublications(publications)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
-
     }
+
 
     fun saveToken(userToken: Token) {
         sharedPreferences.edit().apply {
@@ -188,6 +209,7 @@ object SharedPrefManager {
         }
     }
 
+
     fun getStudentData(): Student? {
         val jsonStudentData = sharedPreferences.getString(STUDENT_DATA, null)
         return Gson().fromJson(jsonStudentData, Student::class.java)
@@ -200,7 +222,61 @@ object SharedPrefManager {
             apply()
         }
     }
+    fun getGrants(): List<Grant> {
+        val jsonGrants = sharedPreferences.getString(GRANTS, null)
+        val type: Type = object : TypeToken<List<Grant>>() {}.type
+        return Gson().fromJson(jsonGrants, type)
+    }
 
+    fun saveGrants(grants: List<Grant>) {
+        val jsonGrants = Gson().toJson(grants)
+        sharedPreferences.edit().apply {
+            putString(GRANTS, jsonGrants)
+            apply()
+        }
+    }
+
+    fun getNIOKR(): List<NIOKR> {
+        val jsonNIOKR = sharedPreferences.getString(NIOKR, null)
+        val type: Type = object : TypeToken<List<NIOKR>>() {}.type
+        return Gson().fromJson(jsonNIOKR, type)
+    }
+
+    fun saveNIOKR(niokr: List<NIOKR>) {
+        val jsonNIOKR = Gson().toJson(niokr)
+        sharedPreferences.edit().apply {
+            putString(NIOKR, jsonNIOKR)
+            apply()
+        }
+    }
+
+    fun getDigitalEducationalResources(): List<DigitalEducationalResource> {
+        val jsonResources = sharedPreferences.getString(DIGITAL_EDUCATIONAL_RESOURCES, null)
+        val type: Type = object : TypeToken<List<DigitalEducationalResource>>() {}.type
+        return Gson().fromJson(jsonResources, type)
+    }
+
+    fun saveDigitalEducationalResources(resources: List<DigitalEducationalResource>) {
+        val jsonResources = Gson().toJson(resources)
+        sharedPreferences.edit().apply {
+            putString(DIGITAL_EDUCATIONAL_RESOURCES, jsonResources)
+            apply()
+        }
+    }
+
+    fun getPublications(): List<Publication> {
+        val jsonPublications = sharedPreferences.getString(PUBLICATIONS, null)
+        val type: Type = object : TypeToken<List<Publication>>() {}.type
+        return Gson().fromJson(jsonPublications, type)
+    }
+
+    fun savePublications(publications: List<Publication>) {
+        val jsonPublications = Gson().toJson(publications)
+        sharedPreferences.edit().apply {
+            putString(PUBLICATIONS, jsonPublications)
+            apply()
+        }
+    }
     fun getSecurityEvents(): List<SecurityEvent>? {
         val jsonSecurityEvents = sharedPreferences.getString(SECURITY_EVENTS, null)
         val type: Type = object : TypeToken<List<SecurityEvent>>() {}.type
@@ -271,6 +347,21 @@ object SharedPrefManager {
                 checkTokenExpiration()
 
                 val refreshedStudentSemester = userApi.getStudentSemester("Bearer ${getAccessToken()}", year, period)
+                saveStudentSemester(refreshedStudentSemester)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun refreshStudentSemesterUsingRefreshToken() {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                val refreshedStudentSemester = userApi.getStudentSemester("Bearer ${getAccessToken()}")
                 saveStudentSemester(refreshedStudentSemester)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -417,9 +508,8 @@ object SharedPrefManager {
     }
 
     fun clearData() {
-                sharedPreferences.edit().clear().apply()
+         sharedPreferences.edit().clear().apply()
         }
-
 
     private fun createRetrofitApi(baseUrl: String): MrsuApi {
         val interceptor = HttpLoggingInterceptor()

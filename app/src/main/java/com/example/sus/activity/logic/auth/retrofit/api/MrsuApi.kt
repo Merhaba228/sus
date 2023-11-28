@@ -58,6 +58,29 @@ interface MrsuApi {
         @Query("mode") mode: String
     ): List<EventInfo>
 
+    @GET("v1/Grant")
+    suspend fun getGrants(
+        @Header("Authorization") authorization: String,
+        @Query("type") type: Boolean
+    ): List<Grant>
+
+    @GET("v1/NIOKR")
+    suspend fun getNIOKR(
+        @Header("Authorization") authorization: String
+    ): List<NIOKR>
+
+    @GET("v1/DigitalEducationalResource")
+    suspend fun getDigitalEducationalResources(
+        @Header("Authorization") authorization: String,
+        @Query("type") type: Boolean = false
+    ): List<DigitalEducationalResource>
+
+    @GET("v1/Publication")
+    suspend fun getPublications(
+        @Header("Authorization") authorization: String,
+        @Query("publicationType") publicationType: Int? = null
+    ): List<Publication>
+
     @GET("v1/StudentTimeTable")
     suspend fun getStudentTimeTable(
         @Header("Authorization") authorization: String,

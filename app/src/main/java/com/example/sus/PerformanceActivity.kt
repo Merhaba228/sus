@@ -15,6 +15,13 @@ import android.view.View
 import android.view.LayoutInflater
 import java.util.Locale
 import kotlin.math.round
+import android.content.Context
+import android.os.Environment
+import android.net.Uri
+import android.app.DownloadManager
+import android.util.Log
+import android.widget.ImageButton
+
 
 class PerformanceActivity : AppCompatActivity() {
     private lateinit var titleTextView: TextView
@@ -57,8 +64,17 @@ class PerformanceActivity : AppCompatActivity() {
         controlDotsAdapter = ControlDotsAdapter(sections)
         recyclerView.adapter = controlDotsAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val backButton: ImageButton = findViewById(R.id.arrow_back)
+        backButton.setOnClickListener {
+            onBackPressed()
+        }
     }
+
+
 }
+
+
 
 class ControlDotsAdapter(private val sectionsList: List<Sections>) :
     RecyclerView.Adapter<ControlDotsAdapter.ControlDotViewHolder>() {
@@ -102,6 +118,10 @@ class ControlDotsAdapter(private val sectionsList: List<Sections>) :
             val titleTextView: TextView = itemView.findViewById(R.id.textViewControlDotTitle)
             val dateTextView: TextView = itemView.findViewById(R.id.textViewControlDotDate)
             val markTextView: TextView = itemView.findViewById(R.id.textViewControlDotMark)
+            val reportDateTextView: TextView = itemView.findViewById(R.id.textViewControlDotReportDate)
+            val reportDocTextView: TextView = itemView.findViewById(R.id.textViewControlDotReportFile)
+            val reportTitleTextView: TextView = itemView.findViewById(R.id.textViewControlDotReportTitle)
+            val reportDownloadTextView: TextView = itemView.findViewById(R.id.textViewControlDotReportFile)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerControlDotViewHolder {
@@ -114,11 +134,12 @@ class ControlDotsAdapter(private val sectionsList: List<Sections>) :
             val currentControlDot = controlDotsList[position]
 
             holder.titleTextView.text = currentControlDot.title
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
             if (currentControlDot.date.isNullOrEmpty()) {
                 holder.dateTextView.text = "Срок сдачи: не установлен"
             } else {
-                val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
                 val date = inputFormat.parse(currentControlDot.date)
 
                 val outputFormat = SimpleDateFormat("dd MMMM", Locale.getDefault())
@@ -132,8 +153,36 @@ class ControlDotsAdapter(private val sectionsList: List<Sections>) :
             } else {
                 holder.markTextView.text = "Балл: ? / ${currentControlDot.maxBall}"
             }
+
+            if (currentControlDot.report != null && currentControlDot.report.createDate != null) {
+                val date = inputFormat.parse(currentControlDot.report.createDate)
+                val outputFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+                val formattedDate = outputFormat.format(date)
+                holder.reportDateTextView.text = "Отчет прикреплен: $formattedDate"
+                holder.reportTitleTextView.text = "Название отчета: ${currentControlDot.report.docFiles.fileName}"
+                holder.reportDocTextView.setOnClickListener {
+                    currentControlDot.report.docFiles?.let { docFiles ->
+                        downloadDocument(holder.itemView.context, docFiles.url, docFiles.fileName)
+                    }
+                }
+
+            } else {
+                holder.reportDateTextView.visibility = View.GONE
+                holder.reportTitleTextView.visibility = View.GONE
+                holder.reportDownloadTextView.visibility = View.GONE
+            }
         }
 
+        private fun downloadDocument(context: Context, documentUrl: String, fileName: String) {
+            val request = DownloadManager.Request(Uri.parse(documentUrl))
+                .setTitle(fileName)
+                .setDescription("Скачивание отчета")
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+
+            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            downloadManager.enqueue(request)
+        }
         override fun getItemCount(): Int {
             return controlDotsList.size
         }

@@ -50,12 +50,6 @@ class EtcMenu : Fragment() {
 //            startActivity(intent)
 //        }
 
-        val button3 = view.findViewById<View>(R.id.menu_disciplines_button)
-        button3.setOnClickListener()
-        {
-            val intent = Intent(requireContext(), DisciplinesActivity::class.java)
-            startActivity(intent)
-        }
 //
 //        val button4 = view.findViewById<View>(R.id.events_button)
 //        button4.setOnClickListener()

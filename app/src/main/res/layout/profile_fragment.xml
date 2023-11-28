@@ -11,9 +11,83 @@
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/background_test4">
 
-        android:background="@drawable/background_test4"
-        >
+        <TextView
+            android:id="@+id/myEventsEmptyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Записей нет"
+            android:elevation="5dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:textSize="18sp"
+            android:padding="15dp"
+            android:background="@drawable/rounded_border"
+            android:textColor="@color/violet1"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/myEvents_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/niokrEmptyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Записей нет"
+            android:elevation="5dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:textSize="18sp"
+            android:padding="15dp"
+            android:background="@drawable/rounded_border"
+            android:textColor="@color/violet1"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/niokrButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/eorEmptyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Записей нет"
+            android:elevation="5dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:textSize="18sp"
+            android:padding="15dp"
+            android:background="@drawable/rounded_border"
+            android:textColor="@color/violet1"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/eorButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/publicationsEmptyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Записей нет"
+            android:elevation="5dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:textSize="18sp"
+            android:padding="15dp"
+            android:background="@drawable/rounded_border"
+            android:textColor="@color/violet1"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/publications_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/imageView9"
@@ -102,6 +176,43 @@
             app:layout_constraintTop_toBottomOf="@+id/textView10"
             android:layout_marginTop="8dp"/>
 
+
+        <FrameLayout
+            android:id="@+id/myEventsRecyclerViewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/myEvents_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewMyEvents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_border"
+                android:elevation="10dp"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/niokrRecyclerViewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/niokrButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewNiokr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_border"
+                android:elevation="10dp" />
+
+        </FrameLayout>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/myEvents_button"
             android:layout_width="match_parent"
@@ -117,11 +228,12 @@
             android:drawablePadding="15dp"
             android:textSize="15sp"
             android:background="@drawable/background_white"
-            android:text="@string/myEvents"
+            android:text="Мои гранты"
             app:layout_constraintTop_toBottomOf="@id/textView11" />
 
+
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button4"
+            android:id="@+id/niokrButton"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginTop="15dp"
@@ -135,12 +247,11 @@
             android:paddingStart="10dp"
             android:drawablePadding="15dp"
             android:background="@drawable/background_white"
-            android:text="@string/documents"
+            android:text="НИОКР"
             app:layout_constraintTop_toBottomOf="@id/myEvents_button" />
 
-
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button6"
+            android:id="@+id/eorButton"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginTop="15dp"
@@ -154,11 +265,29 @@
             android:paddingStart="10dp"
             android:drawablePadding="15dp"
             android:background="@drawable/background_white"
-            android:text="Трудоустройство"
-            app:layout_constraintTop_toBottomOf="@id/button4" />
+            android:text="ЭОР"
+            app:layout_constraintTop_toBottomOf="@id/niokrButton" />
+
+        <FrameLayout
+            android:id="@+id/eorRecyclerViewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/eorButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewEor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_border"
+                android:elevation="10dp" />
+
+        </FrameLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/turnstiles_button"
+            android:id="@+id/publications_button"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginTop="15dp"
@@ -174,38 +303,26 @@
             android:paddingStart="10dp"
             android:drawablePadding="15dp"
             android:background="@drawable/background_white"
-            android:text="Турникеты"
-            app:layout_constraintTop_toBottomOf="@id/button6" />
+            android:text="Публикации"
+            app:layout_constraintTop_toBottomOf="@id/eorButton" />
 
-        <Button
-            android:id="@+id/back_button"
-            android:layout_width="171dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="210dp"
-            android:layout_marginBottom="4dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:text="Назад"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+        <FrameLayout
+            android:id="@+id/publicationsRecyclerViewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/publications_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/exitButton2"
-            android:layout_width="171dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="210dp"
-            android:layout_marginBottom="4dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:text="Выход"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewPublications"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_border"
+                android:elevation="10dp" />
+
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/imageView10"
@@ -217,8 +334,7 @@
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             android:clickable="true"
-            android:focusable="true"
-            />
+            android:focusable="true" />
 
         <ImageView
             android:id="@+id/imageView11"
@@ -230,17 +346,7 @@
             android:layout_marginBottom="-40dp"
             app:layout_constraintStart_toStartOf ="@id/imageView9"
             android:clickable="true"
-            android:focusable="true"
-            />
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigationView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bluelet1"
-            app:menu="@menu/navigation_menu"
-            app:itemTextColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:focusable="true" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

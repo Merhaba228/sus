@@ -3,7 +3,6 @@ package com.example.sus
 import SharedPrefManager
 import android.content.Intent
 import android.os.Bundle
-
 import android.text.SpannableStringBuilder
 import android.text.Spannable
 import android.text.SpannableString
@@ -12,18 +11,19 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CalendarView
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sus.activity.logic.auth.retrofit.dto.StudentTimeTable
-import android.widget.CalendarView
-import android.widget.ImageView
+import com.example.sus.activity.logic.auth.retrofit.dto.TimeTableLessonDiscipline
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.sus.activity.logic.auth.retrofit.dto.Schedule
-import com.example.sus.activity.logic.auth.retrofit.dto.TimeTableLessonDiscipline
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,24 +33,27 @@ import java.util.Date
 import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import com.example.sus.activity.logic.auth.retrofit.dto.Schedule
 
-class TimeTableActivity : AppCompatActivity()
-{
+
+class TimeTableFragment : Fragment() {
+
     private lateinit var dateTextView: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var loadingIndicator: ProgressBar
     private lateinit var timeTableAdapter: TimeTableAdapter
     private lateinit var calendarView: CalendarView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main4)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.timetable_fragment, container, false)
 
-
-        calendarView = findViewById(R.id.calendarView)
-        dateTextView = findViewById(R.id.idTVDate)
-        recyclerView = findViewById(R.id.timetable_recyclerView)
-        loadingIndicator = findViewById(R.id.loadingIndicator)
+        calendarView = view.findViewById(R.id.calendarView)
+        dateTextView = view.findViewById(R.id.idTVDate)
+        recyclerView = view.findViewById(R.id.timetable_recyclerView)
+        loadingIndicator = view.findViewById(R.id.loadingIndicator)
 
         val locale = Locale("ru")
         Locale.setDefault(locale)
@@ -59,11 +62,11 @@ class TimeTableActivity : AppCompatActivity()
         configuration.locale = locale
         resources.updateConfiguration(configuration, resources.displayMetrics)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         timeTableAdapter = TimeTableAdapter()
         recyclerView.adapter = timeTableAdapter
 
-        SharedPrefManager.getInstance(this).refreshDataUsingRefreshToken()
+        SharedPrefManager.getInstance(requireContext()).refreshDataUsingRefreshToken()
 
         val studentTimeTable = SharedPrefManager.getStudentTimeTable()
         dateTextView.text = SimpleDateFormat("dd MMMM yyyy", Locale("ru")).format(Date())
@@ -90,12 +93,14 @@ class TimeTableActivity : AppCompatActivity()
             }
         }
 
-        val button3 = findViewById<View>(R.id.arrow_back)
-        button3.setOnClickListener {
-            val intent = Intent(this@TimeTableActivity, bottom_menu::class.java)
+        val backButton: ImageButton = view.findViewById(R.id.arrow_back)
+        backButton.setOnClickListener {
+            val intent = Intent(requireContext(), bottom_menu::class.java)
             intent.putExtra("activityName", "general_activity")
             startActivity(intent)
         }
+
+        return view
     }
 
     private fun createTimeTable(studentTimeTable: List<StudentTimeTable>?) {
@@ -155,9 +160,7 @@ class TimeTableActivity : AppCompatActivity()
                 lessonAdapter.submitList(lessonDisciplines.toList())
 
             }
-
         }
-
     }
 
     inner class LessonAdapter : RecyclerView.Adapter<LessonAdapter.LessonViewHolder>() {
@@ -231,7 +234,7 @@ class TimeTableActivity : AppCompatActivity()
 
                     lessonNameTextView.text = spannableBuilder
 
-                    val teacherPhoto: ImageView = itemView.findViewById(R.id.teacher_image)
+                    val teacherPhoto = itemView.findViewById<ImageView>(R.id.teacher_image)
                     val profilePhotoUrl = lesson?.teacher?.photo?.urlSmall
                     Glide.with(itemView.context)
                         .load(profilePhotoUrl)
@@ -239,11 +242,9 @@ class TimeTableActivity : AppCompatActivity()
                         .transform(RoundedCorners(100))
                         .into(teacherPhoto)
                 }
-                    else lessonNameTextView.text = "(Пара отсутствует)"
+                else lessonNameTextView.text = "(Пара отсутствует)"
                 lastLessonNumber = lessonNumber
             }
         }
     }
 }
-
-
