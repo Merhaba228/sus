@@ -37,7 +37,7 @@ class general_activity : AppCompatActivity() {
         val button4 = findViewById<View>(R.id.events_button)
         button4.setOnClickListener()
         {
-            val intent = Intent(this@general_activity, actualEvents_activity::class.java)
+            val intent = Intent(this@general_activity, ActualEventsActivity::class.java)
             startActivity(intent)
         }
 

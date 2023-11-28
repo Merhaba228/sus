@@ -33,6 +33,8 @@ object SharedPrefManager {
     private const val STUDENT_SEMESTER = "student_semester"
     private const val STUDENT_RATING_PLAN = "student_rating_plan"
     private const val EVENTS = "events"
+    private const val EVENT_DATA = "event_data"
+    private const val NEWS_LIST = "news_list"
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var instance: SharedPrefManager
@@ -76,11 +78,17 @@ object SharedPrefManager {
                 saveSecurityEvents(securityEvents)
 
                 val studentTimeTable = userApi.getStudentTimeTable("Bearer ${currentAccessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
+                val studentPlanNumber = studentTimeTable[1].planNumber
                 saveStudentTimeTable(studentTimeTable)
 
                 val studentSemester = userApi.getStudentSemester("Bearer ${currentAccessToken}")
                 saveStudentSemester(studentSemester)
 
+                val events = userApi.getEventsByDate("Bearer ${currentAccessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
+                saveEvents(events)
+
+                val news = userApi.getNews("Bearer ${currentAccessToken}")
+                saveNewsList(news)
 
             } catch (e: Exception) {
 
@@ -129,6 +137,54 @@ object SharedPrefManager {
         sharedPreferences.edit().apply {
             putString(STUDENT_DATA, jsonStudentData)
             apply()
+        }
+    }
+
+    fun getEvent(): Event? {
+        val jsonEventData = sharedPreferences.getString(EVENT_DATA, null)
+        return Gson().fromJson(jsonEventData, Event::class.java)
+    }
+
+    fun saveEvent(event: Event) {
+        val jsonEventData = Gson().toJson(event)
+        sharedPreferences.edit().apply {
+            putString(EVENT_DATA, jsonEventData)
+            apply()
+        }
+    }
+
+    fun saveNewsList(newsList: List<News>) {
+        val jsonNewsList = Gson().toJson(newsList)
+        sharedPreferences.edit().apply {
+            putString(NEWS_LIST, jsonNewsList)
+            apply()
+        }
+    }
+
+    fun getNewsList(): List<News>? {
+        val jsonNewsList = sharedPreferences.getString(NEWS_LIST, null)
+        val type: Type = object : TypeToken<List<News>>() {}.type
+        return Gson().fromJson(jsonNewsList, type)
+    }
+
+    fun refreshNewsListUsingRefreshToken(callback: (List<News>) -> Unit) {
+        val BASE_URL = "https://papi.mrsu.ru"
+        val newsApi = createRetrofitApi(BASE_URL)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                Log.d("Check_news_1", "123")
+                val currentAccessToken = getAccessToken()
+                Log.d("Check_news_2", "123")
+                val refreshedNewsList = newsApi.getNews("Bearer ${currentAccessToken}")
+                Log.d("Check_news_3", "123")
+                saveNewsList(refreshedNewsList)
+
+                callback(refreshedNewsList)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -187,7 +243,6 @@ object SharedPrefManager {
         }
     }
 
-
     fun getStudentTimeTable(): List<StudentTimeTable>? {
         val jsonStudentTimeTable = sharedPreferences.getString(STUDENT_TIME_TABLE, null)
         val type: Type = object : TypeToken<List<StudentTimeTable>>() {}.type
@@ -217,6 +272,40 @@ object SharedPrefManager {
 
                 val refreshedStudentSemester = userApi.getStudentSemester("Bearer ${getAccessToken()}", year, period)
                 saveStudentSemester(refreshedStudentSemester)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun refreshEventUsingRefreshToken(eventid: String, callback: (Event) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+
+                val refreshedEvent = userApi.getEventById("Bearer ${getAccessToken()}", eventid)
+                saveEvent(refreshedEvent)
+                callback(refreshedEvent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun refreshAllEventUsingRefreshToken(callback: (List <EventInfo>) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                Log.d("Check_events_1", getAccessToken().toString())
+                val refreshedEvents = userApi.getEvents("Bearer ${getAccessToken()}")
+                Log.d("Check_events_2", "123")
+                saveEvents(refreshedEvents)
+                Log.d("Check_events_3", "123")
+                callback(refreshedEvents)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

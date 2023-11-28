@@ -17,15 +17,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import android.util.Log
 import android.widget.Spinner
 import android.widget.ArrayAdapter
 import android.widget.AdapterView
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import android.widget.ImageButton
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 interface OnItemClickListener {
     fun onItemClick(disciplineId: String)
@@ -81,6 +77,11 @@ class DisciplinesActivity : AppCompatActivity() {
             }
         }
 
+        val backButton: ImageButton = findViewById(R.id.arrow_back)
+        backButton.setOnClickListener {
+            onBackPressed()
+        }
+
     }
 
     internal fun updateRecyclerView() {
@@ -127,7 +128,11 @@ class DisciplinesActivity : AppCompatActivity() {
             })
             recyclerView.adapter = recordBooksAdapter
 
+    }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }
 

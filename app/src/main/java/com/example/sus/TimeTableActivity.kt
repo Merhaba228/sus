@@ -1,11 +1,8 @@
 package com.example.sus
 
 import SharedPrefManager
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 
 import android.text.SpannableStringBuilder
 import android.text.Spannable
@@ -18,19 +15,14 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sus.activity.logic.auth.retrofit.dto.StudentTimeTable
 import android.widget.CalendarView
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.loginapp.activity.logic.auth.retrofit.dto.UserPhoto
 import com.example.sus.activity.logic.auth.retrofit.dto.Schedule
-import com.example.sus.activity.logic.auth.retrofit.dto.TimeTableLesson
 import com.example.sus.activity.logic.auth.retrofit.dto.TimeTableLessonDiscipline
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +30,6 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
-import androidx.core.text.HtmlCompat
 import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -165,7 +156,6 @@ class TimeTableActivity : AppCompatActivity()
 
             }
 
-
         }
 
     }
@@ -188,6 +178,30 @@ class TimeTableActivity : AppCompatActivity()
             val lesson = lessonList?.get(position)
             lesson?.let {
                 holder.bind(it)
+
+                holder.itemView.setOnClickListener {
+                    loadingIndicator.visibility = View.VISIBLE
+                    var disciplineId = lesson.first?.id
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        suspendCoroutine { continuation ->
+                            SharedPrefManager.refreshStudentRatingPlanUsingRefreshToken(disciplineId.toString()) { result ->
+                                continuation.resume(result)
+                            }
+                        }
+
+                        suspendCoroutine { continuation ->
+                            SharedPrefManager.refreshCurrentDisciplineUsingRefreshToken(disciplineId.toString()) { result ->
+                                continuation.resume(result)
+                            }
+                        }
+
+                        loadingIndicator.visibility = View.GONE
+
+                        val intent = Intent(holder.itemView.context, PerformanceActivity::class.java)
+                        holder.itemView.context.startActivity(intent)
+                    }
+                }
             }
         }
 

@@ -1,6 +1,5 @@
 package com.example.sus
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.ViewGroup
 import android.view.LayoutInflater
 
-class security_activity : AppCompatActivity() {
+class SecurityActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SecurityEventAdapter
 
@@ -72,12 +71,15 @@ class security_activity : AppCompatActivity() {
             }
         }
 
-        val arrow_button = findViewById<View>(R.id.arrow_back)
-        arrow_button.setOnClickListener {
-            val intent = Intent(this@security_activity, bottom_menu::class.java)
-            intent.putExtra("activityName", "profile_activity")
-            startActivity(intent)
+        val backButton: ImageButton = findViewById(R.id.arrow_back)
+        backButton.setOnClickListener {
+            onBackPressed()
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }
 

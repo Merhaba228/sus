@@ -1,5 +1,6 @@
 package com.example.sus
 
+import SharedPrefManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -61,7 +62,7 @@ class general1 : Fragment() {
         val button4 = view.findViewById<View>(R.id.events_button)
         button4.setOnClickListener()
         {
-            val intent = Intent(requireContext(), actualEvents_activity::class.java)
+            val intent = Intent(requireContext(), ActualEventsActivity::class.java)
             startActivity(intent)
         }
 
@@ -69,6 +70,14 @@ class general1 : Fragment() {
         button5.setOnClickListener()
         {
             val intent = Intent(requireContext(), polls_activity::class.java)
+            startActivity(intent)
+        }
+
+        val button6 = view.findViewById<View>(R.id.newsButton)
+        button6.setOnClickListener()
+        {
+            SharedPrefManager.getInstance(requireContext()).refreshNewsListUsingRefreshToken(){news ->  }
+            val intent = Intent(requireContext(), NewsActivity::class.java)
             startActivity(intent)
         }
 

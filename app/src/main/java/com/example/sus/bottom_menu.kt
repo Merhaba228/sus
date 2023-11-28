@@ -35,8 +35,8 @@ class bottom_menu : AppCompatActivity() {
             when(it.itemId){
                 R.id.profileFragment -> replaceFragment(profile1())
                 R.id.homeFragment -> replaceFragment(general1())
+                R.id.etcFragment -> replaceFragment(EtcMenu())
                 else ->{
-
 
                 }
 
@@ -50,12 +50,9 @@ class bottom_menu : AppCompatActivity() {
     }
 
     private fun replaceFragment(fragment : Fragment){
-
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frame_layout,fragment)
         fragmentTransaction.commit()
-
-
     }
 }

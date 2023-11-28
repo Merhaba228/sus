@@ -30,21 +30,25 @@ class login_activity : AppCompatActivity() {
     private val BASE_URL_TOKEN = "https://p.mrsu.ru"
     private val BASE_URL_USER = "https://papi.mrsu.ru"
 
+    override fun onStart() {
+        super.onStart()
+        val sharedPrefManager = SharedPrefManager.getInstance(this)
+        if(sharedPrefManager.getRefreshToken() != null) {
+            sharedPrefManager.refreshDataUsingRefreshToken()
+            performActionsAfterAuthentication()
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+         Log.d("Check_login_1","123")
         val sharedPrefManager = SharedPrefManager.getInstance(this)
 
         username = findViewById(R.id.editUsername)
         password = findViewById(R.id.editPassword)
         loginButton = findViewById(R.id.enterButton)
 
-        if(sharedPrefManager.getRefreshToken() != null) {
-            sharedPrefManager.refreshDataUsingRefreshToken()
-            performActionsAfterAuthentication()
-        }
-
+        Log.d("Check_login_2","123")
         val tokenApi = createRetrofitClient(BASE_URL_TOKEN).create(MrsuApi::class.java)
         val userApi = createRetrofitClient(BASE_URL_USER).create(MrsuApi::class.java)
 
@@ -73,7 +77,7 @@ class login_activity : AppCompatActivity() {
 
     private fun handleTokenResponse(userToken: Token, sharedPrefManager: SharedPrefManager, userApi: MrsuApi) {
         if (userToken.accessToken != null) {
-                try {
+                try {Log.d("Check_response",userToken.accessToken);
                     sharedPrefManager.saveToken(userToken)
                     performActionsAfterAuthentication()
                 } catch (e: Exception) {

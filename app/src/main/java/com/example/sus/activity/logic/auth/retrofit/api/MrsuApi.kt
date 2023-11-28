@@ -22,11 +22,30 @@ interface MrsuApi {
         @Query("date") date: String
     ): List<SecurityEvent>
 
+    @GET("v1/StudentsGroup")
+    suspend fun getStudentsGroup(
+        @Header("Authorization") authorization: String,
+        @Query("group") group: String,
+        @Query("planNumber") planNumber: String,
+        @Query("disciplineId") disciplineId: Int
+    ): List<UserCrop>
+
+    @GET("v1/Event")
+    suspend fun getEventById(
+        @Header("Authorization") authorization: String,
+        @Query("eventid") eventId: String
+    ): Event
+
     @GET("v1/Events")
     suspend fun getEventsByDate(
         @Header("Authorization") authorization: String,
         @Query("date") date: String
     ): List<EventInfo>
+
+    @GET("v1/News")
+    suspend fun getNews(
+        @Header("Authorization") authorization: String,
+    ): List<News>
 
     @GET("v1/Events")
     suspend fun getEvents(
@@ -64,7 +83,6 @@ interface MrsuApi {
     suspend fun getDisciplineById(
         @Header("Authorization") authorization: String,
         @Query("id") id: Int): Discipline
-
 
     @FormUrlEncoded
     @POST("OAuth/token")

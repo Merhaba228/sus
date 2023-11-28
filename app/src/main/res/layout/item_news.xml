@@ -1,0 +1,26 @@
+<!-- item_news.xml -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:drawablePadding="7dp"
+        android:text="Дата"
+        android:textColor="@color/violet1"
+        android:drawableStart="@drawable/calendar"
+        android:layout_marginBottom="8dp"/>
+
+    <WebView
+        android:id="@+id/webViewContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewTitle"/>
+
+</RelativeLayout>

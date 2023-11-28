@@ -16,7 +16,7 @@
 
     <item
         android:id="@+id/settingsFragment"
-        android:icon="@drawable/events"
+        android:icon="@drawable/calendar"
         android:title="@string/menu_settings" />
 
     <item

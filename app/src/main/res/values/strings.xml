@@ -13,7 +13,7 @@
     <string name="polls">Опросы</string>
     <string name="menu_home">Главная</string>
     <string name="menu_profile">Профиль</string>
-    <string name="menu_settings">Мероприятия</string>
+    <string name="menu_settings">Расписание</string>
     <string name="menu_performance">Успеваемость</string>
     <string name="menu_etc">Меню</string>
     <string name="exit">Выход</string>
@@ -69,5 +69,7 @@
     <string name="documents">Документы</string>
     <string name="perform">Успеваемость</string>
     <string name="disciplines">Дисциплины</string>
+    <string name="myEvents">Мои события</string>
     <string name="title_activity_main4">MainActivity4</string>
+    <string name="title_activity_all_events">AllEvents_activity</string>
 </resources>

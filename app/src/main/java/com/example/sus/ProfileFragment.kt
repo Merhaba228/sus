@@ -60,15 +60,15 @@ class profile1 : Fragment() {
 
         val button3 = view.findViewById<View>(R.id.turnstiles_button)
         button3.setOnClickListener {
-            val intent = Intent(requireContext(), security_activity::class.java)
+            val intent = Intent(requireContext(), SecurityActivity::class.java)
             startActivity(intent)
         }
 
-        val button4 = view.findViewById<View>(R.id.performance_button)
-        button4.setOnClickListener {
-            val intent = Intent(requireContext(), DisciplinesActivity::class.java)
-            startActivity(intent)
-        }
+//        val button4 = view.findViewById<View>(R.id.myEvents_button)
+//        button4.setOnClickListener {
+//            val intent = Intent(requireContext(), MyEvents::class.java)
+//            startActivity(intent)
+//        }
 
         return view
     }

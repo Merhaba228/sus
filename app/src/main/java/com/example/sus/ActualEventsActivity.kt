@@ -2,22 +2,16 @@ package com.example.sus
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CalendarView
-import android.widget.CalendarView.OnDateChangeListener
 import android.widget.ProgressBar
-import android.widget.TableLayout
-import android.widget.TableRow
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.loginapp.activity.logic.auth.retrofit.dto.SecurityEvent
 import com.example.sus.activity.logic.auth.retrofit.dto.EventInfo
-import com.example.sus.activity.logic.auth.retrofit.dto.Events
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,8 +21,10 @@ import java.util.Date
 import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import android.util.Log
+import android.widget.ImageButton
 
-class actualEvents_activity : AppCompatActivity() {
+class ActualEventsActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ActualEventsAdapter
 
@@ -46,6 +42,10 @@ class actualEvents_activity : AppCompatActivity() {
         val dateTV = findViewById<TextView>(R.id.idTVDate)
         recyclerView = findViewById(R.id.actualEvents_recyclerView)
         val calendarView = findViewById<CalendarView>(R.id.eventsCalendarView)
+        val backButton: ImageButton = findViewById(R.id.arrow_back)
+        backButton.setOnClickListener {
+            onBackPressed()
+        }
 
         val currentDate = Calendar.getInstance()
         val actualEvents = SharedPrefManager.getEvents()
@@ -81,13 +81,18 @@ class actualEvents_activity : AppCompatActivity() {
             }
         }
 
+    }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }
 
 class ActualEventsAdapter(private var events: List<EventInfo>?) : RecyclerView.Adapter<ActualEventsAdapter.ActualEventsViewHolder>() {
     inner class ActualEventsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.eventTitleTextView)
+        val dateTextView: TextView = itemView.findViewById(R.id.eventDateTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActualEventsViewHolder {
@@ -100,10 +105,33 @@ class ActualEventsAdapter(private var events: List<EventInfo>?) : RecyclerView.A
 
         if (eventCollection != null && position < eventCollection.size) {
             val event = eventCollection[position]
+
             holder.titleTextView.text = event.name
+            holder.dateTextView.text = "${event.startDate.substring(0,10)} - ${event.endDate.substring(0,10)} "
+            holder.itemView.setOnClickListener{
+
+                var eventid = event.id
+
+                CoroutineScope(Dispatchers.Main).launch {
+
+                    suspendCoroutine { continuation ->
+                        SharedPrefManager.refreshEventUsingRefreshToken(eventid.toString()) { result ->
+                            continuation.resume(result)
+                        }
+                    }
+
+                    Log.d("Check_event_5","213")
+
+                    val intent = Intent(holder.itemView.context, EventDescriptionActivity::class.java)
+                    holder.itemView.context.startActivity(intent)
+                }
+
+            }
+
         } else {
 
         }
+
     }
 
     override fun getItemCount(): Int {

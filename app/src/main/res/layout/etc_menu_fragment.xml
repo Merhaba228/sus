@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_test4">
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView_etc_menu"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="start|top"
+            android:background="@color/violet1"
+            android:fontFamily="@font/alatsi"
+            android:gravity="center"
+            android:text="Дополнительно"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/frameLayout"
+        android:layout_marginTop="30dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/menu_allEvents_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:padding="15dp"
+            android:drawableStart="@drawable/events"
+            android:drawablePadding="15dp"
+            android:background="@drawable/rounded_border"
+            android:text="Все события"
+            android:layout_marginStart="5dp"
+            android:textColor="#000000"
+            android:layout_marginBottom="15dp"
+            android:fontFamily="@font/alatsi"
+            android:textSize="16sp"
+            android:textAllCaps="false"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/menu_guide_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:padding="15dp"
+            android:drawableStart="@drawable/performance"
+            android:drawablePadding="15dp"
+            android:text="Руководство пользователя"
+            android:background="@drawable/rounded_border"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="#000000"
+            android:fontFamily="@font/alatsi"
+            android:textSize="16sp"
+            android:textAllCaps="false"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/menu_disciplines_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:padding="15dp"
+            android:drawableStart="@drawable/documents"
+            android:drawablePadding="15dp"
+            android:text="@string/disciplines"
+            android:background="@drawable/rounded_border"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="#000000"
+            android:fontFamily="@font/alatsi"
+            android:textSize="16sp"
+            android:textAllCaps="false"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/menu_tests_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:padding="15dp"
+            android:drawableStart="@drawable/tests"
+            android:drawablePadding="15dp"
+            android:text="Тесты"
+            android:background="@drawable/rounded_border"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="#000000"
+            android:fontFamily="@font/alatsi"
+            android:textSize="16sp"
+            android:textAllCaps="false"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/menu_polls_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:padding="15dp"
+            android:drawableStart="@drawable/polls_image"
+            android:drawablePadding="15dp"
+            android:text="Опросы"
+            android:background="@drawable/rounded_border"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="#000000"
+            android:fontFamily="@font/alatsi"
+            android:textSize="16sp"
+            android:textAllCaps="false"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/menu_settings_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:padding="15dp"
+            android:drawableStart="@drawable/settings_profile"
+            android:drawablePadding="15dp"
+            android:text="Настройки"
+            android:background="@drawable/rounded_border"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="#000000"
+            android:fontFamily="@font/alatsi"
+            android:textSize="16sp"
+            android:textAllCaps="false"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/menu_exit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:padding="15dp"
+            android:drawableStart="@drawable/exit"
+            android:drawablePadding="15dp"
+            android:text="Выход"
+            android:background="@drawable/rounded_border"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="#000000"
+            android:fontFamily="@font/alatsi"
+            android:textSize="16sp"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
