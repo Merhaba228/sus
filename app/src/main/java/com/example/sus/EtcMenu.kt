@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import android.content.Intent
+import android.net.Uri
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,8 +82,19 @@ class EtcMenu : Fragment() {
             startActivity(intent)
         }
 
+        val buttonGuide = view.findViewById<View>(R.id.menu_guide_button)
+        buttonGuide.setOnClickListener {
+            val url = "https://www.fld.mrsu.ru/wp-content/uploads/2018/11/Rukovodstvo-polzovatelya-EIOS_ver_1.21-1-1.pdf"
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)
+        }
+
+
         return view
     }
+
+
 
     companion object {
 

@@ -39,6 +39,7 @@ object SharedPrefManager {
     private const val NIOKR = "niokr"
     private const val DIGITAL_EDUCATIONAL_RESOURCES = "digital_educational_resources"
     private const val PUBLICATIONS = "publications"
+    private const val FORUM_MESSAGE = "forum_message"
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var instance: SharedPrefManager
@@ -148,6 +149,65 @@ object SharedPrefManager {
         }
     }
 
+    fun deleteForumMessage(id: Int, callback: (Unit) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                val deletedMessage = userApi.deleteForumMessage("Bearer ${getAccessToken()}",id)
+
+                callback(deletedMessage)
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+            }
+        }
+    }
+
+    fun sendForumMessageUsingRefreshToken(text: String, disciplineid: Int, callback: (ForumMessage) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                val sendForumMessage = userApi.sendForumMessage("Bearer ${getAccessToken()}",disciplineid,text)
+
+                callback(sendForumMessage)
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+            }
+        }
+    }
+
+    fun getForumMessageUsingRefreshToken(disciplineid: Int, callback: (List<ForumMessage>) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                val refreshedForumMessage = userApi.getForumMessage("Bearer ${getAccessToken()}", disciplineid)
+                saveForumMessage(refreshedForumMessage)
+
+                callback(refreshedForumMessage)
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+            }
+        }
+    }
+
+    fun saveForumMessage(forumMessage: List<ForumMessage>) {
+        val jsonStudentTimeTable = Gson().toJson(forumMessage)
+        sharedPreferences.edit().apply {
+            putString(FORUM_MESSAGE, jsonStudentTimeTable)
+            apply()
+        }
+    }
+
     fun getUserData(): User? {
         val jsonUserData = sharedPreferences.getString(USER_DATA, null)
         return Gson().fromJson(jsonUserData, User::class.java)
@@ -224,8 +284,12 @@ object SharedPrefManager {
     }
     fun getGrants(): List<Grant> {
         val jsonGrants = sharedPreferences.getString(GRANTS, null)
-        val type: Type = object : TypeToken<List<Grant>>() {}.type
-        return Gson().fromJson(jsonGrants, type)
+        return if (jsonGrants != null) {
+            val type: Type = object : TypeToken<List<Grant>>() {}.type
+            Gson().fromJson(jsonGrants, type)
+        } else {
+            emptyList()
+        }
     }
 
     fun saveGrants(grants: List<Grant>) {
@@ -238,9 +302,14 @@ object SharedPrefManager {
 
     fun getNIOKR(): List<NIOKR> {
         val jsonNIOKR = sharedPreferences.getString(NIOKR, null)
-        val type: Type = object : TypeToken<List<NIOKR>>() {}.type
-        return Gson().fromJson(jsonNIOKR, type)
+        if (jsonNIOKR != null) {
+            val type: Type = object : TypeToken<List<NIOKR>>() {}.type
+            return Gson().fromJson(jsonNIOKR, type)
+        } else {
+            return emptyList()
+        }
     }
+
 
     fun saveNIOKR(niokr: List<NIOKR>) {
         val jsonNIOKR = Gson().toJson(niokr)
@@ -250,11 +319,6 @@ object SharedPrefManager {
         }
     }
 
-    fun getDigitalEducationalResources(): List<DigitalEducationalResource> {
-        val jsonResources = sharedPreferences.getString(DIGITAL_EDUCATIONAL_RESOURCES, null)
-        val type: Type = object : TypeToken<List<DigitalEducationalResource>>() {}.type
-        return Gson().fromJson(jsonResources, type)
-    }
 
     fun saveDigitalEducationalResources(resources: List<DigitalEducationalResource>) {
         val jsonResources = Gson().toJson(resources)
@@ -264,10 +328,24 @@ object SharedPrefManager {
         }
     }
 
+    fun getDigitalEducationalResources(): List<DigitalEducationalResource> {
+        val jsonResources = sharedPreferences.getString(DIGITAL_EDUCATIONAL_RESOURCES, null)
+        return if (jsonResources != null) {
+            val type: Type = object : TypeToken<List<DigitalEducationalResource>>() {}.type
+            Gson().fromJson(jsonResources, type)
+        } else {
+            emptyList()
+        }
+    }
+
     fun getPublications(): List<Publication> {
         val jsonPublications = sharedPreferences.getString(PUBLICATIONS, null)
-        val type: Type = object : TypeToken<List<Publication>>() {}.type
-        return Gson().fromJson(jsonPublications, type)
+        return if (jsonPublications != null) {
+            val type: Type = object : TypeToken<List<Publication>>() {}.type
+            Gson().fromJson(jsonPublications, type)
+        } else {
+            emptyList()
+        }
     }
 
     fun savePublications(publications: List<Publication>) {
@@ -391,11 +469,9 @@ object SharedPrefManager {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 checkTokenExpiration()
-                Log.d("Check_events_1", getAccessToken().toString())
+
                 val refreshedEvents = userApi.getEvents("Bearer ${getAccessToken()}")
-                Log.d("Check_events_2", "123")
                 saveEvents(refreshedEvents)
-                Log.d("Check_events_3", "123")
                 callback(refreshedEvents)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -428,11 +504,9 @@ object SharedPrefManager {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 checkTokenExpiration()
-                Log.d("Check_events_1", "123")
+
                 val refreshedEvents = userApi.getEventsByDate("Bearer ${getAccessToken()}", date)
-                Log.d("Check_events_2", "123")
                 saveEvents(refreshedEvents)
-                Log.d("Check_events_3", "123")
 
                 callback(refreshedEvents)
             } catch (e: Exception) {

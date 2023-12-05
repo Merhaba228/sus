@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background = "@drawable/background_test4"
+>
+    <LinearLayout
+        android:id="@+id/forumMessageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/violet1">
+
+            <ImageButton
+                android:id="@+id/arrow_back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/arrow_back"
+                android:background="@null"
+                android:layout_gravity="start|center"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="15dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Общение"
+                android:padding="7dp"
+                android:fontFamily="@font/alatsi"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/violet1">
+
+            <TextView
+                android:id="@+id/forum_message_discipline_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="Название предмета"
+                android:padding="7dp"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ScrollView
+            android:id="@+id/scrollviewforum"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="15"
+            android:layout_gravity="bottom">
+
+            <LinearLayout
+                android:id="@+id/forum_message_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ProgressBar
+                    android:id="@+id/loadingIndicatorforumMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:indeterminateDrawable="@drawable/progress_bar_custom_2"
+                    />
+            </LinearLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/forum_message_send_form"
+            android:background="@drawable/rounded_border"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:orientation="horizontal"
+            android:padding="5dp">
+            <EditText
+                android:id="@+id/sendMessageText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".80"
+                android:background="@drawable/rounded_border"
+                android:drawablePadding="10dp"
+                android:padding="5dp"
+                android:hint="Введите сообщение"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textColorHint="#85ffffff"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.488"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="260dp" />
+            <ImageButton
+                android:id="@+id/sendMessageButton"
+                android:layout_width="0dp"
+                android:layout_marginStart="5dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".20"
+                android:background="@color/violet1"
+                android:src="@drawable/messages_white"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

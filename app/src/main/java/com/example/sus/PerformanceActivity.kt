@@ -75,7 +75,6 @@ class PerformanceActivity : AppCompatActivity() {
 }
 
 
-
 class ControlDotsAdapter(private val sectionsList: List<Sections>) :
     RecyclerView.Adapter<ControlDotsAdapter.ControlDotViewHolder>() {
 

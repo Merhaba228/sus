@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Header
 import retrofit2.http.Query
-
+import retrofit2.http.DELETE
 interface MrsuApi {
     @GET("v1/User")
     suspend fun getUser(@Header("Authorization") authorization: String): User
@@ -21,6 +21,26 @@ interface MrsuApi {
         @Header("Authorization") authorization: String,
         @Query("date") date: String
     ): List<SecurityEvent>
+
+    @GET("v1/ForumMessage")
+    suspend fun getForumMessage(
+        @Header ("Authorization") authorization: String,
+        @Query ("disciplineId") id: Int)
+            : List<ForumMessage>
+
+    @DELETE("v1/ForumMessage")
+    suspend fun deleteForumMessage(
+        @Header ("Authorization") authorization: String,
+        @Query ("id") id: Int
+    ): Unit
+
+    @FormUrlEncoded
+    @POST("v1/ForumMessage")
+    suspend fun sendForumMessage(
+        @Header ("Authorization") authorization: String,
+        @Query ("disciplineId") id: Int,
+        @Field ("Text") text: String)
+            : ForumMessage
 
     @GET("v1/StudentsGroup")
     suspend fun getStudentsGroup(

@@ -37,11 +37,10 @@ class general1 : Fragment() {
         val view: View = inflater.inflate(R.layout.general_fragment, container, false)
         SharedPrefManager.getInstance(requireContext()).refreshDataUsingRefreshToken()
 
-        val button = view.findViewById<View>(R.id.exit_button)
+        val button = view.findViewById<View>(R.id.forum_button)
         button.setOnClickListener()
         {
-            SharedPrefManager.clearData()
-            val intent = Intent(requireContext(), login_activity::class.java)
+            val intent = Intent(requireContext(), Forum::class.java)
             startActivity(intent)
         }
 
